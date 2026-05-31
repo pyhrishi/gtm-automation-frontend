@@ -2753,7 +2753,7 @@ Enterprise Customer Success Team`;
       </div>
     ) : (
       <div 
-        className="h-screen w-full bg-gradient-to-br from-indigo-50/60 via-slate-50 to-purple-50/50 text-slate-800 flex flex-col font-sans relative overflow-y-auto overflow-x-hidden lg:overflow-hidden"
+        className="h-screen w-full bg-gradient-to-br from-indigo-50/60 via-slate-50 to-purple-50/50 text-slate-800 flex flex-col font-sans relative overflow-hidden"
         style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
       >
         <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-200/40 blur-3xl pointer-events-none z-0" />
@@ -2820,7 +2820,7 @@ Enterprise Customer Success Team`;
         </div>
       </header>
 
-      <section className="sticky top-[57px] z-10 px-4 lg:px-8 pt-3 pb-2 grid grid-cols-2 lg:grid-cols-4 gap-3 flex-shrink-0 bg-indigo-50/60 backdrop-blur-md border-b border-indigo-100/40">
+      <section className="px-4 lg:px-8 pt-3 pb-2 grid grid-cols-2 lg:grid-cols-4 gap-3 z-10 flex-shrink-0">
         <div className="group relative bg-white/90 backdrop-blur-md border border-indigo-100/50 p-3 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-indigo-500/5 hover:-translate-y-0.5 hover:border-indigo-200/80 transition-all duration-300 min-h-0 cursor-help">
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Portfolio Size</p>
@@ -2899,7 +2899,7 @@ Enterprise Customer Success Team`;
         </div>
       </section>
 
-      <main className="lg:flex-1 lg:min-h-0 lg:overflow-hidden px-4 lg:px-8 pb-4 flex flex-col lg:flex-row gap-4 lg:gap-6 z-10 relative">
+      <main className="flex-1 min-h-0 overflow-y-auto lg:overflow-hidden px-4 lg:px-8 pb-4 flex flex-col lg:flex-row gap-4 lg:gap-6 z-10 relative">
         
         <div className="w-full lg:w-1/3 lg:flex-shrink-0 flex flex-col lg:min-h-0">
           <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col min-h-[420px] lg:flex-1 lg:min-h-0 overflow-hidden">
