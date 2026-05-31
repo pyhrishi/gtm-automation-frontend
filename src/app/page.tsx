@@ -85,7 +85,7 @@ export default function Dashboard() {
   
   const logEndRef = useRef<HTMLDivElement>(null);
 
-  // Dynamically load font styles
+  // Load typography from Google Fonts
   useEffect(() => {
     const link = document.createElement("link");
     link.href = "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap";
@@ -96,7 +96,7 @@ export default function Dashboard() {
     };
   }, []);
 
-  // Set default account when changing CSM
+  // Sync default account when changing CSM
   useEffect(() => {
     const portfolio = PORTFOLIOS[selectedCsm];
     if (portfolio && portfolio.accounts.length > 0) {
@@ -104,7 +104,7 @@ export default function Dashboard() {
     }
   }, [selectedCsm]);
 
-  // Auto-scroll log traces
+  // Scroll logging terminal
   useEffect(() => {
     logEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [logs]);
@@ -148,7 +148,6 @@ export default function Dashboard() {
     );
   };
 
-  // Compute portfolio stats
   const activePortfolio = PORTFOLIOS[selectedCsm] || { csmName: "", accounts: [] };
   const accounts = activePortfolio.accounts;
   const totalAccounts = accounts.length;
@@ -159,119 +158,117 @@ export default function Dashboard() {
 
   return (
     <div 
-      className="min-h-screen bg-[#090D1A] text-slate-100 flex flex-col font-sans overflow-y-auto"
+      className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans"
       style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
-      {/* GLOWS */}
-      <div className="bg-blue-600/10 blur-[180px] w-[500px] h-[500px] absolute top-[-100px] left-[-100px] rounded-full pointer-events-none z-0" />
-      <div className="bg-violet-600/10 blur-[180px] w-[500px] h-[500px] absolute bottom-[-100px] right-[-100px] rounded-full pointer-events-none z-0" />
-
       {/* TOP HEADER */}
-      <header className="border-b border-white/5 bg-[#0E1325]/45 backdrop-blur-xl px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 z-10 shadow-lg relative">
+      <header className="border-b border-slate-200 bg-white px-8 py-5 flex flex-col md:flex-row justify-between items-center gap-4 shadow-sm z-10">
         <div className="flex items-center gap-3">
-          <div className="bg-gradient-to-tr from-blue-600 to-indigo-600 p-2 rounded-xl shadow-lg shadow-blue-500/20">
-            <Activity className="text-white w-6 h-6 animate-pulse" />
+          <div className="bg-indigo-600 p-2.5 rounded-xl shadow-md shadow-indigo-500/10">
+            <Activity className="text-white w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-lg font-extrabold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent leading-tight">HG Insights Workspace</h1>
-            <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest flex items-center gap-1">
-              <Zap className="w-3 h-3 fill-current" /> CSM Portfolio Intelligence & Delivery
+            <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">HG Insights Workspace</h1>
+            <p className="text-[10px] text-indigo-600 font-bold uppercase tracking-widest flex items-center gap-1">
+              <Zap className="w-3 h-3 fill-current" /> CSM Portfolio Control Panel
             </p>
           </div>
         </div>
 
-        {/* Dynamic CSM Portfolio Selection */}
-        <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-4 py-2 rounded-xl shadow-inner backdrop-blur-md">
-          <span className="text-xs font-bold text-slate-400 uppercase flex items-center gap-1"><User className="w-3.5 h-3.5 text-blue-400" /> Active CSM:</span>
+        {/* Dynamic CSM Selector */}
+        <div className="flex items-center gap-3 bg-slate-100 border border-slate-200 px-4 py-2 rounded-xl">
+          <span className="text-xs font-bold text-slate-500 uppercase flex items-center gap-1">
+            <User className="w-4 h-4 text-indigo-600" /> Active Portfolio:
+          </span>
           <select 
             value={selectedCsm}
             onChange={(e) => setSelectedCsm(e.target.value)}
-            className="bg-transparent text-white text-sm font-semibold border-none outline-none cursor-pointer focus:ring-0"
+            className="bg-transparent text-slate-900 text-sm font-bold border-none outline-none cursor-pointer focus:ring-0"
           >
-            <option value="CSM_MARK_R" className="bg-[#111827]">Mark Robinson (CSM_MARK_R)</option>
-            <option value="CSM_SARAH_K" className="bg-[#111827]">Sarah Jenkins (CSM_SARAH_K)</option>
-            <option value="CSM_ALEX_B" className="bg-[#111827]">Alex Baldwin (CSM_ALEX_B)</option>
-            <option value="CSM_JESSICA_T" className="bg-[#111827]">Jessica Taylor (CSM_JESSICA_T)</option>
-            <option value="CSM_DAVID_L" className="bg-[#111827]">David Lang (CSM_DAVID_L)</option>
-            <option value="CSM_EMILY_C" className="bg-[#111827]">Emily Chen (CSM_EMILY_C)</option>
-            <option value="CSM_MICHAEL_W" className="bg-[#111827]">Michael Wong (CSM_MICHAEL_W)</option>
+            <option value="CSM_MARK_R">Mark Robinson (CSM_MARK_R)</option>
+            <option value="CSM_SARAH_K">Sarah Jenkins (CSM_SARAH_K)</option>
+            <option value="CSM_ALEX_B">Alex Baldwin (CSM_ALEX_B)</option>
+            <option value="CSM_JESSICA_T">Jessica Taylor (CSM_JESSICA_T)</option>
+            <option value="CSM_DAVID_L">David Lang (CSM_DAVID_L)</option>
+            <option value="CSM_EMILY_C">Emily Chen (CSM_EMILY_C)</option>
+            <option value="CSM_MICHAEL_W">Michael Wong (CSM_MICHAEL_W)</option>
           </select>
         </div>
       </header>
 
       {/* METRICS DASHBOARD */}
-      <section className="px-8 pt-8 pb-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 z-10 relative">
+      <section className="px-8 pt-8 pb-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 z-10">
         {/* Total Accounts */}
-        <div className="bg-[#12182D]/70 border border-white/5 p-5 rounded-2xl flex items-center justify-between shadow-xl">
+        <div className="bg-white border border-slate-200/80 p-6 rounded-2xl flex items-center justify-between shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
           <div>
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Portfolio Size</p>
-            <h3 className="text-2xl font-extrabold text-white">{totalAccounts} Accounts</h3>
+            <h3 className="text-2xl font-extrabold text-slate-900">{totalAccounts} Accounts</h3>
             <p className="text-[10px] text-slate-500 mt-1">Assigned Enterprise Contracts</p>
           </div>
-          <div className="bg-blue-500/10 p-3.5 rounded-xl border border-blue-500/20 text-blue-400">
+          <div className="bg-indigo-50 p-3.5 rounded-xl text-indigo-600 border border-indigo-100">
             <Layout className="w-6 h-6" />
           </div>
         </div>
 
         {/* Portfolio ARR */}
-        <div className="bg-[#12182D]/70 border border-white/5 p-5 rounded-2xl flex items-center justify-between shadow-xl">
+        <div className="bg-white border border-slate-200/80 p-6 rounded-2xl flex items-center justify-between shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
           <div>
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Portfolio ARR</p>
-            <h3 className="text-2xl font-extrabold text-emerald-400">${(totalArr / 1000).toFixed(0)}k</h3>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Managed ARR</p>
+            <h3 className="text-2xl font-extrabold text-slate-900">${(totalArr / 1000).toFixed(0)}k</h3>
             <p className="text-[10px] text-slate-500 mt-1">Contract value currently managed</p>
           </div>
-          <div className="bg-emerald-500/10 p-3.5 rounded-xl border border-emerald-500/20 text-emerald-400">
+          <div className="bg-emerald-50 p-3.5 rounded-xl text-emerald-600 border border-emerald-100">
             <DollarSign className="w-6 h-6" />
           </div>
         </div>
 
         {/* Avg Health */}
-        <div className="bg-[#12182D]/70 border border-white/5 p-5 rounded-2xl flex items-center justify-between shadow-xl">
+        <div className="bg-white border border-slate-200/80 p-6 rounded-2xl flex items-center justify-between shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
           <div>
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Average Health</p>
-            <h3 className={`text-2xl font-extrabold ${avgHealth >= 7.0 ? 'text-emerald-400' : avgHealth >= 5.0 ? 'text-amber-400' : 'text-rose-400'}`}>{avgHealth} / 10</h3>
+            <h3 className="text-2xl font-extrabold text-slate-900">{avgHealth} / 10</h3>
             <p className="text-[10px] text-slate-500 mt-1">Portfolio wellness coefficient</p>
           </div>
-          <div className="bg-indigo-500/10 p-3.5 rounded-xl border border-indigo-500/20 text-indigo-400">
+          <div className="bg-blue-50 p-3.5 rounded-xl text-blue-600 border border-blue-100">
             <Heart className="w-6 h-6" />
           </div>
         </div>
 
         {/* Churn Risks */}
-        <div className="bg-[#12182D]/70 border border-white/5 p-5 rounded-2xl flex items-center justify-between shadow-xl relative overflow-hidden group">
+        <div className="bg-white border border-slate-200/80 p-6 rounded-2xl flex items-center justify-between shadow-[0_4px_20px_rgba(0,0,0,0.02)] relative overflow-hidden">
           {criticalCount > 0 && (
-            <div className="bg-rose-600 w-1.5 h-full absolute left-0 top-0 animate-pulse" />
+            <div className="bg-rose-500 w-1.5 h-full absolute left-0 top-0 animate-pulse" />
           )}
           <div>
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Critical Churn Risks</p>
-            <h3 className={`text-2xl font-extrabold ${criticalCount > 0 ? 'text-rose-400' : 'text-emerald-400'}`}>{criticalCount} Accounts</h3>
-            <p className="text-[10px] text-slate-500 mt-1">Health &lt; 6.0 + escalation transcripts</p>
+            <h3 className={`text-2xl font-extrabold ${criticalCount > 0 ? 'text-rose-600' : 'text-emerald-600'}`}>{criticalCount} Accounts</h3>
+            <p className="text-[10px] text-slate-500 mt-1">Health &lt; 6.0 + escalated logs</p>
           </div>
-          <div className={`p-3.5 rounded-xl border ${criticalCount > 0 ? 'bg-rose-500/10 border-rose-500/20 text-rose-400' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'}`}>
-            {criticalCount > 0 ? <ShieldAlert className="w-6 h-6 animate-bounce" /> : <CheckCircle2 className="w-6 h-6" />}
+          <div className={`p-3.5 rounded-xl border ${criticalCount > 0 ? 'bg-rose-50 text-rose-600 border-rose-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
+            {criticalCount > 0 ? <ShieldAlert className="w-6 h-6 animate-pulse" /> : <CheckCircle2 className="w-6 h-6" />}
           </div>
         </div>
       </section>
 
       {/* WORKSPACE CONTENT BODY */}
-      <main className="flex-1 px-8 pb-8 grid grid-cols-1 lg:grid-cols-12 gap-6 z-10 relative overflow-hidden">
+      <main className="flex-1 px-8 pb-8 grid grid-cols-1 lg:grid-cols-12 gap-6 z-10 relative">
         
-        {/* LEFT WORKSPACE PANELS (5 Cols): Account roster & Actions Checklist */}
-        <div className="lg:col-span-7 flex flex-col gap-6 overflow-hidden">
+        {/* LEFT WORKSPACE PANELS (7 Cols) */}
+        <div className="lg:col-span-7 flex flex-col gap-6">
           
-          {/* 1. Account Roster Panel */}
-          <div className="bg-[#111827]/40 backdrop-blur-xl border border-white/5 rounded-2xl shadow-xl flex flex-col flex-1 max-h-[400px] overflow-hidden">
-            <div className="px-6 py-4 border-b border-white/5 flex justify-between items-center bg-[#0E1423]/60">
+          {/* 1. Account Roster Table Panel */}
+          <div className="bg-white border border-slate-200 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col flex-1 max-h-[400px] overflow-hidden">
+            <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50/50">
               <div>
-                <h3 className="font-bold text-white tracking-wide">Account Portfolio Grid</h3>
+                <h3 className="font-extrabold text-slate-900 text-sm tracking-wide">Account Portfolio Grid</h3>
                 <p className="text-xs text-slate-500">Relational telemetry joined from Vitally, Salesforce, and Weflow</p>
               </div>
               
-              {/* Trigger Engine Button */}
+              {/* Sync Trigger Button */}
               <button
                 onClick={triggerAutomation}
                 disabled={loading}
-                className="flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all cursor-pointer"
+                className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-md shadow-indigo-500/10 transition-all cursor-pointer hover:-translate-y-0.5 active:translate-y-0"
               >
                 {loading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5 fill-current" />}
                 Sync Engine
@@ -281,7 +278,7 @@ export default function Dashboard() {
             <div className="overflow-y-auto flex-1">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-white/5 text-[10px] font-bold text-slate-400 uppercase tracking-wider bg-slate-900/40">
+                  <tr className="border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider bg-slate-50">
                     <th className="py-3 px-6">Account Name</th>
                     <th className="py-3 px-4">Health</th>
                     <th className="py-3 px-4">ARR</th>
@@ -290,7 +287,7 @@ export default function Dashboard() {
                     <th className="py-3 px-4"></th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-slate-100">
                   {accounts.map((acc) => {
                     const isSelected = selectedAccount === acc.id;
                     const isCrit = acc.status === "CRITICAL";
@@ -299,31 +296,31 @@ export default function Dashboard() {
                       <tr 
                         key={acc.id}
                         onClick={() => setSelectedAccount(acc.id)}
-                        className={`cursor-pointer transition-colors text-sm hover:bg-white/5 ${isSelected ? 'bg-blue-600/10 border-l-2 border-blue-500' : ''}`}
+                        className={`cursor-pointer transition-colors text-sm hover:bg-slate-50/80 ${isSelected ? 'bg-indigo-50/50 border-l-4 border-indigo-600' : ''}`}
                       >
                         <td className="py-3.5 px-6 font-semibold">
                           <div className="flex flex-col">
-                            <span className="text-white">{acc.name}</span>
-                            <span className="text-[10px] text-slate-500 font-mono">{acc.id}</span>
+                            <span className="text-slate-900">{acc.name}</span>
+                            <span className="text-[10px] text-slate-400 font-mono">{acc.id}</span>
                           </div>
                         </td>
                         <td className="py-3.5 px-4 font-bold">
-                          <span className={`flex items-center gap-1.5 ${isCrit ? 'text-rose-400' : 'text-emerald-400'}`}>
-                            <span className={`w-2 h-2 rounded-full ${isCrit ? 'bg-rose-500' : 'bg-emerald-500'}`} />
+                          <span className={`flex items-center gap-1.5 ${isCrit ? 'text-rose-600' : 'text-emerald-600'}`}>
+                            <span className={`w-2.5 h-2.5 rounded-full ${isCrit ? 'bg-rose-500 animate-pulse' : 'bg-emerald-500'}`} />
                             {acc.health}
                           </span>
                         </td>
-                        <td className="py-3.5 px-4 font-mono font-medium">${(acc.arr / 1000).toFixed(0)}k</td>
-                        <td className="py-3.5 px-4 font-medium text-slate-400">
-                          <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 opacity-60" /> {acc.renewal}</span>
+                        <td className="py-3.5 px-4 font-mono text-slate-700 font-medium">${(acc.arr / 1000).toFixed(0)}k</td>
+                        <td className="py-3.5 px-4 font-medium text-slate-500">
+                          <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 opacity-60 text-slate-400" /> {acc.renewal}</span>
                         </td>
                         <td className="py-3.5 px-4 text-center">
-                          <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded border ${acc.sentiment === "Negative" ? 'bg-rose-500/10 border-rose-500/20 text-rose-400' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'}`}>
+                          <span className={`text-[9px] font-extrabold uppercase px-2.5 py-1 rounded-md border ${acc.sentiment === "Negative" ? 'bg-rose-50 border-rose-200 text-rose-700' : 'bg-emerald-50 border-emerald-200 text-emerald-700'}`}>
                             {acc.sentiment}
                           </span>
                         </td>
                         <td className="py-3.5 px-4 text-right">
-                          <ChevronRight className="w-4 h-4 text-slate-600" />
+                          <ChevronRight className="w-4 h-4 text-slate-400" />
                         </td>
                       </tr>
                     );
@@ -333,19 +330,19 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* 2. Action Items Checklist Center */}
-          <div className="bg-[#111827]/40 backdrop-blur-xl border border-white/5 rounded-2xl shadow-xl flex flex-col flex-1 min-h-[220px] max-h-[300px] overflow-hidden">
-            <div className="px-6 py-4 border-b border-white/5 bg-[#0E1423]/60 flex justify-between items-center">
+          {/* 2. Action checklist */}
+          <div className="bg-white border border-slate-200 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col flex-1 min-h-[220px] max-h-[300px] overflow-hidden">
+            <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/50 flex justify-between items-center">
               <div>
-                <h3 className="font-bold text-white tracking-wide">Consolidated Action Center</h3>
+                <h3 className="font-extrabold text-slate-900 text-sm tracking-wide">Consolidated Action Center</h3>
                 <p className="text-xs text-slate-500">Transcripts parsed tasks from Weflow conversational logs</p>
               </div>
-              <span className="bg-blue-600/10 border border-blue-500/20 text-blue-400 text-[10px] font-bold px-2 py-0.5 rounded-lg uppercase">
+              <span className="bg-indigo-50 border border-indigo-100 text-indigo-600 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase">
                 Inbox
               </span>
             </div>
 
-            <div className="p-6 overflow-y-auto flex-1 space-y-3">
+            <div className="p-6 overflow-y-auto flex-1 space-y-3.5">
               {accounts.map(acc => {
                 const isCrit = acc.status === "CRITICAL";
                 return acc.actions.map((action, i) => {
@@ -356,24 +353,24 @@ export default function Dashboard() {
                     <div 
                       key={actionId}
                       onClick={() => toggleAction(actionId)}
-                      className={`flex items-start gap-3 p-3 rounded-xl border transition-all cursor-pointer select-none
+                      className={`flex items-start gap-3.5 p-4 rounded-xl border transition-all cursor-pointer select-none
                         ${isChecked 
-                          ? 'bg-slate-900/40 border-white/5 opacity-55' 
+                          ? 'bg-slate-50/60 border-slate-100 opacity-50' 
                           : isCrit 
-                            ? 'bg-rose-500/5 border-rose-500/10 hover:border-rose-500/20' 
-                            : 'bg-white/5 border-white/10 hover:border-white/20'}`}
+                            ? 'bg-rose-50/40 border-rose-100 hover:border-rose-200' 
+                            : 'bg-white border-slate-200 hover:border-slate-300'}`}
                     >
                       <input 
                         type="checkbox"
                         checked={isChecked}
                         readOnly
-                        className="mt-0.5 h-4.5 w-4.5 rounded border-white/10 text-blue-600 focus:ring-0 cursor-pointer"
+                        className="mt-0.5 h-4.5 w-4.5 rounded border-slate-300 text-indigo-600 focus:ring-0 cursor-pointer"
                       />
-                      <div className="flex-1 leading-tight">
-                        <p className={`text-sm ${isChecked ? 'line-through text-slate-500' : 'text-slate-200'}`}>
+                      <div className="flex-1 leading-normal">
+                        <p className={`text-sm font-semibold ${isChecked ? 'line-through text-slate-400' : 'text-slate-700'}`}>
                           {action}
                         </p>
-                        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1 block">
+                        <span className={`text-[9px] font-extrabold uppercase tracking-widest mt-1.5 block ${isCrit ? 'text-rose-600' : 'text-slate-400'}`}>
                           {acc.name} • {isCrit ? 'CRITICAL RISK' : 'ADOPTION ENHANCEMENT'}
                         </span>
                       </div>
@@ -385,30 +382,30 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* RIGHT WORKSPACE PANELS (5 Cols): Slack Simulator / JSON view + Terminal */}
-        <div className="lg:col-span-5 flex flex-col gap-6 overflow-hidden">
+        {/* RIGHT WORKSPACE PANELS (5 Cols) */}
+        <div className="lg:col-span-5 flex flex-col gap-6">
           
-          {/* Slack UI or JSON Block Kit Simulator */}
-          <div className="bg-[#121625]/80 backdrop-blur-md rounded-2xl shadow-2xl border border-white/5 flex flex-col flex-1 min-h-[460px] overflow-hidden">
+          {/* Slack Briefing Card */}
+          <div className="bg-white border border-slate-200 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col flex-1 min-h-[460px] overflow-hidden">
             
-            {/* Simulator Header */}
-            <div className="px-6 py-4 border-b border-white/5 bg-[#0E1423]/60 flex justify-between items-center">
+            {/* Header */}
+            <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/50 flex justify-between items-center">
               <div>
-                <h3 className="font-bold text-white tracking-wide">Delivery Vector Verification</h3>
+                <h3 className="font-extrabold text-slate-900 text-sm tracking-wide">Delivery Vector Validation</h3>
                 <p className="text-xs text-slate-500">Simulate Slack formatting outcomes</p>
               </div>
 
               {/* View Mode Toggle */}
-              <div className="flex bg-slate-950 p-1 rounded-xl border border-white/5">
+              <div className="flex bg-slate-100 p-1.5 rounded-xl border border-slate-200">
                 <button 
                   onClick={() => setViewMode("ui")}
-                  className={`px-3 py-1.5 rounded-lg text-[10px] font-bold tracking-wide transition-all cursor-pointer ${viewMode === "ui" ? "bg-[#1F2937] text-blue-400 border border-white/5 shadow-md" : "text-slate-400 hover:text-slate-200"}`}
+                  className={`px-3 py-1.5 rounded-lg text-[10px] font-bold tracking-wide transition-all cursor-pointer ${viewMode === "ui" ? "bg-white text-indigo-600 border border-slate-200 shadow-sm" : "text-slate-500 hover:text-slate-800"}`}
                 >
                   Slack UI
                 </button>
                 <button 
                   onClick={() => setViewMode("json")}
-                  className={`px-3 py-1.5 rounded-lg text-[10px] font-bold tracking-wide transition-all cursor-pointer ${viewMode === "json" ? "bg-[#1F2937] text-blue-400 border border-white/5 shadow-md" : "text-slate-400 hover:text-slate-200"}`}
+                  className={`px-3 py-1.5 rounded-lg text-[10px] font-bold tracking-wide transition-all cursor-pointer ${viewMode === "json" ? "bg-white text-indigo-600 border border-slate-200 shadow-sm" : "text-slate-500 hover:text-slate-800"}`}
                 >
                   Raw JSON
                 </button>
@@ -416,40 +413,42 @@ export default function Dashboard() {
             </div>
 
             {/* Viewport Content */}
-            <div className="flex-1 overflow-y-auto p-5">
+            <div className="flex-1 overflow-y-auto p-5 bg-slate-50/40">
               
               {/* SLACK UI MODE */}
               {viewMode === "ui" && (
-                <div className="bg-[#1E2235]/40 rounded-xl overflow-hidden border border-white/5 shadow-2xl flex flex-col h-full min-h-[360px]">
+                <div className="bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm flex flex-col h-full min-h-[360px]">
                   {/* Slack aubergine head banner */}
-                  <div className="bg-[#3F0E40] px-4 py-2.5 flex items-center gap-3 border-b border-black/20">
-                    <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
-                    <h4 className="text-white/80 font-bold text-xs ml-2 flex items-center gap-1.5">
-                      <MessageSquare className="w-3.5 h-3.5 text-white/50" /> #csm-intelligence-briefings
+                  <div className="bg-[#3F0E40] px-5 py-3 flex items-center gap-3">
+                    <div className="flex gap-1.5">
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#EC6A5E]" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#F4BF4F]" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#61C554]" />
+                    </div>
+                    <h4 className="text-white font-bold text-xs ml-4 flex items-center gap-1.5">
+                      <MessageSquare className="w-3.5 h-3.5 text-white/60" /> #csm-intelligence-briefings
                     </h4>
                   </div>
 
-                  <div className="p-5 flex-1 overflow-y-auto bg-slate-900/10">
+                  <div className="p-6 flex-1 overflow-y-auto bg-white">
                     {!slackPayload ? (
-                      <div className="h-full flex flex-col items-center justify-center text-slate-500 gap-4 mt-20 mb-20">
-                        <div className="bg-slate-900/60 p-4.5 rounded-full border border-white/5 shadow-lg">
-                          <AlertTriangle className="w-8 h-8 opacity-25 text-yellow-500 animate-pulse" />
+                      <div className="h-full flex flex-col items-center justify-center text-slate-400 gap-4 mt-20 mb-20">
+                        <div className="bg-slate-50 p-4 rounded-full border border-slate-100 shadow-sm">
+                          <AlertTriangle className="w-8 h-8 text-amber-500 animate-pulse" />
                         </div>
-                        <p className="text-slate-400 text-xs font-semibold">Awaiting automated payload delivery...</p>
+                        <p className="text-slate-500 text-xs font-semibold">Awaiting automated payload delivery...</p>
                       </div>
                     ) : (
                       <div className="flex gap-3">
                         {/* Avatar */}
-                        <div className="w-8.5 h-8.5 rounded bg-gradient-to-tr from-blue-600 to-indigo-600 flex-shrink-0 flex items-center justify-center text-white font-extrabold text-[12px] shadow-md shadow-blue-500/10">
+                        <div className="w-9 h-9 rounded bg-indigo-600 flex-shrink-0 flex items-center justify-center text-white font-extrabold text-[12px] shadow-sm">
                           HG
                         </div>
                         
                         <div className="flex-1">
                           <div className="flex items-baseline gap-2 mb-1.5">
-                            <span className="font-bold text-white text-xs hover:underline cursor-pointer">HG Success Bot</span>
-                            <span className="bg-blue-600/10 border border-blue-500/20 text-blue-400 text-[8px] px-1.5 py-0.2 rounded font-extrabold tracking-widest uppercase">APP</span>
+                            <span className="font-bold text-slate-900 text-xs hover:underline cursor-pointer">HG Success Bot</span>
+                            <span className="bg-indigo-50 border border-indigo-100 text-indigo-600 text-[8px] px-1.5 py-0.2 rounded font-extrabold tracking-widest uppercase">APP</span>
                             <span className="text-[10px] text-slate-500">8:45 AM</span>
                           </div>
                           
@@ -458,14 +457,14 @@ export default function Dashboard() {
                             {slackPayload.map((block, index) => {
                               if (block.type === "header") {
                                 return (
-                                  <h2 key={index} className="text-sm font-extrabold text-white mb-3 tracking-tight">
+                                  <h2 key={index} className="text-sm font-extrabold text-slate-900 mb-3 tracking-tight">
                                     {block.text.text}
                                   </h2>
                                 );
                               }
                               
                               if (block.type === "divider") {
-                                return <hr key={index} className="border-white/5 my-3" />;
+                                return <hr key={index} className="border-slate-100 my-3" />;
                               }
                               
                               if (block.type === "section") {
@@ -478,17 +477,17 @@ export default function Dashboard() {
                                 const isStable = block.text.text.includes("🟢");
                                 
                                 // Beautiful, high-end risk highlight boxes
-                                let cardStyle = "text-slate-300";
+                                let cardStyle = "text-slate-700";
                                 if (isCritical) {
-                                  cardStyle = "border-l-4 border-rose-500 bg-rose-500/5 p-4 rounded-r-xl border border-white/5 shadow-[0_0_10px_rgba(244,63,94,0.02)]";
+                                  cardStyle = "border-l-4 border-rose-500 bg-rose-50/50 p-4 rounded-r-xl border border-slate-100 shadow-[0_0_10px_rgba(244,63,94,0.01)]";
                                 } else if (isElevated) {
-                                  cardStyle = "border-l-4 border-amber-500 bg-amber-500/5 p-4 rounded-r-xl border border-white/5 shadow-[0_0_10px_rgba(245,158,11,0.02)]";
+                                  cardStyle = "border-l-4 border-amber-500 bg-amber-50/50 p-4 rounded-r-xl border border-slate-100 shadow-[0_0_10px_rgba(245,158,11,0.01)]";
                                 } else if (isStable) {
-                                  cardStyle = "border-l-4 border-emerald-500 bg-emerald-500/5 p-4 rounded-r-xl border border-white/5 shadow-[0_0_10px_rgba(16,185,129,0.02)]";
+                                  cardStyle = "border-l-4 border-emerald-500 bg-emerald-50/50 p-4 rounded-r-xl border border-slate-100 shadow-[0_0_10px_rgba(16,185,129,0.01)]";
                                 }
                                 
                                 return (
-                                  <div key={index} className={`text-[12px] leading-relaxed tracking-wide ${cardStyle} mb-2`}>
+                                  <div key={index} className={`text-[12.5px] leading-relaxed tracking-wide ${cardStyle} mb-2`}>
                                     <div dangerouslySetInnerHTML={{ __html: formattedText }} />
                                   </div>
                                 );
@@ -505,8 +504,8 @@ export default function Dashboard() {
 
               {/* RAW JSON MODE */}
               {viewMode === "json" && (
-                <div className="bg-black/55 rounded-xl overflow-hidden border border-white/5 shadow-2xl flex flex-col h-full min-h-[360px]">
-                  <div className="bg-[#111827]/60 px-4 py-2 border-b border-white/5 flex justify-between items-center">
+                <div className="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-inner flex flex-col h-full min-h-[360px]">
+                  <div className="bg-slate-950 px-4 py-2 border-b border-slate-800 flex justify-between items-center">
                     <span className="text-[10px] font-mono text-slate-400">payload.json</span>
                     <span className="text-[10px] font-mono text-emerald-400 font-semibold flex items-center gap-1">
                       <CheckCircle2 className="w-3 h-3" /> Block Kit Validated
@@ -521,24 +520,24 @@ export default function Dashboard() {
               )}
             </div>
 
-            {/* Neon Terminal Logger (Docked inside Simulator Card) */}
-            <div className="px-6 py-4 border-t border-white/5 bg-[#0E1423]/60 flex flex-col h-[180px] overflow-hidden">
-              <label className="text-[10px] font-bold text-slate-400 uppercase mb-2 flex items-center gap-1.5">
-                <Terminal className="w-3.5 h-3.5 text-violet-400" /> LangGraph Execution Trace
+            {/* Terminal Trace Logger */}
+            <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex flex-col h-[180px] overflow-hidden">
+              <label className="text-[10px] font-bold text-slate-500 uppercase mb-2 flex items-center gap-1.5">
+                <Terminal className="w-3.5 h-3.5 text-indigo-600" /> LangGraph Execution Trace
               </label>
               <div 
-                className="bg-black/60 rounded-xl p-3 flex-1 overflow-y-auto border border-white/5"
+                className="bg-slate-900 rounded-xl p-3 flex-1 overflow-y-auto border border-slate-800"
                 style={{ fontFamily: "'JetBrains Mono', monospace" }}
               >
                 {logs.length === 0 ? (
-                  <p className="text-slate-600 text-[10px] text-center mt-3">Awaiting execution trigger...</p>
+                  <p className="text-slate-500 text-[10px] text-center mt-3">Awaiting execution trigger...</p>
                 ) : (
                   <div className="space-y-2">
                     {logs.map((log, i) => {
-                      let colorClass = "text-slate-400";
+                      let colorClass = "text-slate-300";
                       if (log.includes("❌")) colorClass = "text-rose-400 font-bold";
                       else if (log.includes("✅")) colorClass = "text-emerald-400 font-semibold";
-                      else if (log.includes("🧠")) colorClass = "text-violet-400";
+                      else if (log.includes("🧠")) colorClass = "text-indigo-400";
                       else if (log.includes("⚡")) colorClass = "text-blue-400";
                       return (
                         <p key={i} className={`text-[10px] leading-relaxed tracking-wide ${colorClass}`}>
