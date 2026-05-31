@@ -2477,7 +2477,7 @@ export default function Dashboard() {
   return (
     appViewMode === "assignment" ? (
       <div 
-        className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans relative pb-12"
+        className="h-screen w-screen bg-slate-950 text-slate-100 flex flex-col font-sans relative overflow-y-auto pb-12"
         style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
       >
         <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-indigo-500/10 blur-3xl pointer-events-none z-0" />
@@ -2600,7 +2600,7 @@ export default function Dashboard() {
       </div>
     ) : (
       <div 
-        className="min-h-screen lg:h-screen bg-gradient-to-br from-indigo-50/60 via-slate-50 to-purple-50/50 text-slate-800 flex flex-col font-sans relative lg:overflow-hidden"
+        className="h-screen w-screen bg-gradient-to-br from-indigo-50/60 via-slate-50 to-purple-50/50 text-slate-800 flex flex-col font-sans relative overflow-y-auto lg:overflow-hidden"
         style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
       >
         <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-200/40 blur-3xl pointer-events-none z-0" />
