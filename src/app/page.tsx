@@ -2200,8 +2200,8 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <section className="px-8 pt-4 pb-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 z-10 flex-shrink-0 min-h-0">
-        <div className="bg-white/90 backdrop-blur-md border border-indigo-100/50 p-4 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-indigo-500/5 hover:-translate-y-0.5 hover:border-indigo-200/80 transition-all duration-300 group">
+      <section className="px-8 pt-4 pb-3 grid grid-cols-4 gap-4 z-10 flex-shrink-0">
+        <div className="bg-white/90 backdrop-blur-md border border-indigo-100/50 p-3 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-indigo-500/5 hover:-translate-y-0.5 hover:border-indigo-200/80 transition-all duration-300 group min-h-0">
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Portfolio Size</p>
             <h3 className="text-xl font-extrabold text-slate-950 tracking-tight">{totalAccounts} Clients</h3>
@@ -2214,7 +2214,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-white/90 backdrop-blur-md border border-emerald-100/50 p-4 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-emerald-500/5 hover:-translate-y-0.5 hover:border-emerald-200/80 transition-all duration-300 group">
+        <div className="bg-white/90 backdrop-blur-md border border-emerald-100/50 p-3 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-emerald-500/5 hover:-translate-y-0.5 hover:border-emerald-200/80 transition-all duration-300 group min-h-0">
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Managed ARR</p>
             <h3 className="text-xl font-extrabold text-slate-950 tracking-tight">{formatARR(totalArr)}</h3>
@@ -2227,7 +2227,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-white/90 backdrop-blur-md border border-blue-100/50 p-4 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-blue-500/5 hover:-translate-y-0.5 hover:border-blue-200/80 transition-all duration-300 group">
+        <div className="bg-white/90 backdrop-blur-md border border-blue-100/50 p-3 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-blue-500/5 hover:-translate-y-0.5 hover:border-blue-200/80 transition-all duration-300 group min-h-0">
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Avg Health Score</p>
             <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">{avgHealth} / 10</h3>
@@ -2244,7 +2244,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-white/95 backdrop-blur-md border border-rose-100 p-4 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-rose-500/5 hover:-translate-y-0.5 hover:border-rose-200 transition-all duration-300 relative overflow-hidden group">
+        <div className="bg-white/95 backdrop-blur-md border border-rose-100 p-3 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-rose-500/5 hover:-translate-y-0.5 hover:border-rose-200 transition-all duration-300 relative overflow-hidden group min-h-0">
           {criticalCount > 0 && (
             <div className="bg-gradient-to-b from-rose-500 to-pink-600 w-1 absolute left-0 top-0 h-full animate-pulse" />
           )}
@@ -2263,9 +2263,9 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <main className="flex-1 min-h-0 overflow-hidden px-8 pb-4 grid grid-cols-1 xl:grid-cols-12 gap-6 z-10 relative">
+      <main className="flex-1 min-h-0 overflow-hidden px-8 pb-4 grid grid-cols-12 gap-6 z-10 relative">
         
-        <div className="xl:col-span-4 flex flex-col h-full min-h-0">
+        <div className="col-span-4 flex flex-col h-full min-h-0">
           <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col h-full min-h-0 overflow-hidden">
             <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/60 flex-shrink-0">
               <div>
@@ -2336,7 +2336,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="xl:col-span-4 flex flex-col gap-4 h-full min-h-0">
+        <div className="col-span-4 flex flex-col gap-4 h-full min-h-0">
           
           <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col p-5 gap-3 h-[57%] min-h-0 overflow-hidden">
             <div className="flex justify-between items-start border-b border-slate-100 pb-3 flex-shrink-0">
@@ -2483,7 +2483,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="xl:col-span-4 flex flex-col h-full min-h-0">
+        <div className="col-span-4 flex flex-col h-full min-h-0">
           
           <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col h-full min-h-0 overflow-hidden">
             
