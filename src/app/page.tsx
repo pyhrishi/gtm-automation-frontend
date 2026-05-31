@@ -2766,7 +2766,7 @@ Enterprise Customer Success Team`;
           </div>
         )}
 
-        <header className="border-b border-indigo-100/60 bg-white/70 backdrop-blur-md px-4 lg:px-8 py-3 flex flex-row justify-between items-center gap-3 shadow-sm relative z-10 flex-shrink-0 w-full">
+        <header className="sticky top-0 border-b border-indigo-100/60 bg-white/80 backdrop-blur-md px-4 lg:px-8 py-3 flex flex-row justify-between items-center gap-3 shadow-sm z-20 flex-shrink-0 w-full">
           <div className="flex items-center gap-4">
             <div className="bg-gradient-to-tr from-indigo-600 to-violet-600 p-2.5 rounded-2xl shadow-lg shadow-indigo-500/20">
               <Activity className="text-white w-6 h-6 animate-pulse" />
