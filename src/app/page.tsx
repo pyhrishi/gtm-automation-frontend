@@ -7,7 +7,7 @@ import {
   Code, Layout, User, CheckCircle2, ChevronRight, Zap, RefreshCw,
   TrendingUp, AlertOctagon, ShieldAlert, CheckSquare, DollarSign, Calendar, Heart,
   ArrowRight, Copy, Check, Info, Mail, Send, Award, Clock, Users, Building,
-  ShieldCheck, Sparkles, X, Plus, BookOpen
+  ShieldCheck, Sparkles, X, Plus, BookOpen, Database, Cpu, ArrowDown, Network
 } from "lucide-react";
 
 // Portfolio database corresponding exactly to backend/generate_mock_data.py
@@ -1983,6 +1983,7 @@ export default function Dashboard() {
   const [appViewMode, setAppViewMode] = useState<"assignment" | "console">("assignment");
   const [assignmentTab, setAssignmentTab] = useState<"design" | "onboarding" | "past">("design");
   const [showDesignDocModal, setShowDesignDocModal] = useState(false);
+  const [showTrdModal, setShowTrdModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [slackPayload, setSlackPayload] = useState<any[] | null>(null);
   const [selectedCsm, setSelectedCsm] = useState("CSM_MARK_R");
@@ -2105,8 +2106,34 @@ export default function Dashboard() {
   // Draft Escalation Email utility
   const openEmailDraft = (acc: any) => {
     const isCrit = acc.status === "CRITICAL";
-    const subject = `CRITICAL ALERT: ${acc.name} - Retention & Risk Mitigation Plan`;
-    const body = `Hi Team,\n\nI am reaching out regarding ${acc.name} (Account ID: ${acc.id}). \n\nOur GTM Telemetry Engine flagged this account with a critical risk status.\n\nKey Metrics:\n- Current Health: ${acc.health}/10\n- ARR Value: $${acc.arr.toLocaleString()}\n- Renewal Date: ${acc.renewal}\n- Customer Sentiment: ${acc.sentiment}\n\nAnalysis Summary:\n${acc.summary}\n\nRequired Action Items:\n${acc.actions.map((act: string) => `- [ ] ${act}`).join("\n")}\n\nLet's coordinate immediately to resolve these blockers.\n\nBest Regards,\n${activePortfolio.csmName}\nCustomer Success Enterprise Team`;
+    const subject = isCrit 
+      ? `Action Required: Critical Retention Alert for ${acc.name}`
+      : `Account Update: ${acc.name} - Portfolio Review`;
+      
+    const body = `Hi Team,
+
+I'm reaching out regarding ${acc.name} (Account ID: ${acc.id}).
+
+Our telemetry engine has recently flagged this account for review, and I wanted to ensure we have a coordinated strategy moving forward.
+
+Key Metrics & Health Indicators:
+• Current Health Score: ${acc.health}/10
+• ARR Impact: $${acc.arr.toLocaleString()}
+• Next Renewal Date: ${acc.renewal}
+• Customer Sentiment: ${acc.sentiment}
+
+Latest Context:
+${acc.summary}
+
+Recommended Action Plan:
+${acc.actions.map((act: string) => `• [ ] ${act}`).join("\n")}
+
+Please review the metrics and action items above so we can align on our next steps to support this account. I'll drop a link to the full account dashboard in Slack shortly.
+
+Best regards,
+
+${activePortfolio.csmName}
+Enterprise Customer Success Team`;
     
     setEmailDrawerAccount(acc);
     setEmailSubject(subject);
@@ -2192,10 +2219,10 @@ export default function Dashboard() {
                 <h4 className="text-sm font-bold text-white">🕰️ Timing & Orchestrator Trigger</h4>
               </div>
               <div className="text-xs text-slate-400 leading-relaxed space-y-2">
-                <span>**Chronological (Production):** Triggered at **7:00 AM every Monday** via AWS EventBridge.</span>
+                <span><strong>Chronological (Production):</strong> Triggered at <strong>7:00 AM every Monday</strong> via AWS EventBridge.</span>
                 <span className="block mt-2 font-semibold text-indigo-400">The 2-Hour Failsafe Buffer:</span>
                 <span className="block mt-1">Standups begin at 9:00 AM. Setting the trigger at 7:00 AM leaves a 2-hour buffer which acts as a crucial operational window to absorb database rate-limiting controls, API key cold starts, and allow automatic LangGraph retries if transient network failures occur.</span>
-                <span className="block mt-2">**On-Demand (Ad-hoc):** Exposed via `/api/trigger-digest` endpoint in the Next.js control panel to let CSMs force-refresh portfolios before key calls.</span>
+                <span className="block mt-2"><strong>On-Demand (Ad-hoc):</strong> Exposed via <code>/api/trigger-digest</code> endpoint in the Next.js control panel to let CSMs force-refresh portfolios before key calls.</span>
               </div>
             </div>
 
@@ -2209,9 +2236,9 @@ export default function Dashboard() {
               <div className="text-xs text-slate-400 leading-relaxed space-y-2">
                 <span>Data is ingested from three systems and joined inside an in-memory compiler on `accountId`:</span>
                 <div className="space-y-1.5 mt-2">
-                  <div>• **Vitally:** Queries client usage trends (`healthScore`, `npsScore`).</div>
-                  <div>• **Salesforce CPQ:** Executes SOQL to extract contract dates, stages, and contract sizes (`arrValue`, `contractEndDate`, `renewalOpportunityStage`).</div>
-                  <div>• **Weflow:** Gathers qualitative conversation summaries (`transcriptSummary`, `escalationFlag`).</div>
+                  <div>• <strong>Vitally:</strong> Queries client usage trends (<code>healthScore</code>, <code>npsScore</code>).</div>
+                  <div>• <strong>Salesforce CPQ:</strong> Executes SOQL to extract contract dates, stages, and contract sizes (<code>arrValue</code>, <code>contractEndDate</code>, <code>renewalOpportunityStage</code>).</div>
+                  <div>• <strong>Weflow:</strong> Gathers qualitative conversation summaries (<code>transcriptSummary</code>, <code>escalationFlag</code>).</div>
                 </div>
               </div>
             </div>
@@ -2232,7 +2259,7 @@ export default function Dashboard() {
             <div className="bg-slate-900/40 border border-slate-850 p-4 rounded-xl space-y-2 text-xs">
               <span className="font-bold text-slate-350 block">Compound Risk Logic:</span>
               <p className="text-slate-400 leading-normal">
-                The LLM evaluates cross-system signals. For example, a low Vitally score is flagged, but a low score *combined* with a renewal date within 45 days and an escalation note in Weflow is automatically promoted to **CRITICAL** risk status.
+                The LLM evaluates cross-system signals. For example, a low Vitally score is flagged, but a low score <em>combined</em> with a renewal date within 45 days and an escalation note in Weflow is automatically promoted to <strong>CRITICAL</strong> risk status.
               </p>
             </div>
           </div>
@@ -2354,10 +2381,10 @@ export default function Dashboard() {
             </div>
             <p>Team,</p>
             <p>
-              Preparing for our Monday 9 AM standup currently requires you to spend roughly **90 minutes** manually logging into Vitally to pull usage statistics, opening Salesforce to check renewal stages, and digging through Weflow notes to recap transcripts. This administrative overhead pulls you away from client focus.
+              Preparing for our Monday 9 AM standup currently requires you to spend roughly <strong>90 minutes</strong> manually logging into Vitally to pull usage statistics, opening Salesforce to check renewal stages, and digging through Weflow notes to recap transcripts. This administrative overhead pulls you away from client focus.
             </p>
             <p>
-              Starting this Monday at **8:45 AM**, you will receive an automated **Portfolio Intelligence Briefing** via a direct Slack message.
+              Starting this Monday at <strong>8:45 AM</strong>, you will receive an automated <strong>Portfolio Intelligence Briefing</strong> via a direct Slack message.
             </p>
             <div className="bg-slate-950/60 p-4 rounded-xl border border-slate-850 space-y-2">
               <h5 className="font-bold text-white text-xs flex items-center gap-1.5">
@@ -2365,49 +2392,17 @@ export default function Dashboard() {
                 💡 Operational Benefits:
               </h5>
               <ul className="list-disc list-inside space-y-1.5 text-slate-400 text-xs">
-                <li>**Zero Manual Ingestion:** All cross-platform databases sync automatically before you log on.</li>
-                <li>**Weekend Risk Visibility:** Instant flags for accounts experiencing weekend drops.</li>
-                <li>**Action Item Consolidation:** Required follow-ups are extracted directly from Weflow transcripts.</li>
+                <li><strong>Zero Manual Ingestion:</strong> All cross-platform databases sync automatically before you log on.</li>
+                <li><strong>Weekend Risk Visibility:</strong> Instant flags for accounts experiencing weekend drops.</li>
+                <li><strong>Action Item Consolidation:</strong> Required follow-ups are extracted directly from Weflow transcripts.</li>
               </ul>
             </div>
             <p>
-              This console is built to defend your calendar. Please watch the 3-minute video walkthrough below to see how to navigate your dashboard control panel and customize your alert thresholds.
+              This console is built to defend your calendar. Check out your dashboard to configure alert thresholds.
             </p>
             <p className="font-bold text-indigo-400">
               — HG Insights Revenue Operations & Automation Team
             </p>
-          </div>
-        </div>
-
-        <hr className="border-slate-800" />
-
-        <div>
-          <h2 className="text-lg font-black text-white tracking-tight flex items-center gap-2">
-            <Play className="w-5 h-5 text-indigo-400" />
-            Loom Presentation Walkthrough
-          </h2>
-          <p className="text-xs text-slate-400 mt-1">
-            A 3-minute video submission detailing the database schema, code files, and console controls.
-          </p>
-
-          <div className="bg-slate-950/60 border border-slate-850 p-8 rounded-3xl mt-4 flex flex-col items-center justify-center text-center gap-4 max-w-3xl mx-auto min-h-[220px]">
-            <div className="bg-indigo-500/10 p-4 rounded-full border border-indigo-500/20 text-indigo-400 animate-pulse">
-              <Play className="w-8 h-8 fill-current" />
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-white">System Demo & Architectural Overview</h4>
-              <p className="text-xs text-slate-500 mt-1 max-w-md">
-                Click below to launch the video walkthrough explaining the Next.js control panel, FastAPI trigger API, and LangGraph workflow nodes.
-              </p>
-            </div>
-            <a 
-              href="https://www.loom.com/share/df46bfbd9e5b4ee89945ee2b6045d62d?sid=b5b63bc0-2051-4091-a189-e14b2d354a72"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-6 py-3 rounded-xl transition-all cursor-pointer shadow-md shadow-indigo-500/10 active:scale-95 flex items-center gap-1.5"
-            >
-              Watch Video Presentation <ArrowRight className="w-3.5 h-3.5" />
-            </a>
           </div>
         </div>
       </div>
@@ -2420,62 +2415,104 @@ export default function Dashboard() {
         <div>
           <h2 className="text-lg font-black text-white tracking-tight flex items-center gap-2">
             <Award className="w-5 h-5 text-purple-400" />
-            GTM Automation Portfolio Case Study
+            GTM Automation Portfolio Case Study: Fraud Fighter AI
           </h2>
           <p className="text-xs text-slate-400 mt-1">
             Review of a production compliance automation engine developed in a prior assignment.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            <div className="space-y-4">
-              <div className="bg-slate-900/60 border border-slate-850 p-5 rounded-2xl">
-                <h4 className="text-sm font-bold text-white">Project: Fraud Fighter AI (ZIGRAM)</h4>
-                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-                  Developed an automated compliance engine. Fraud analyst teams were drowning in volume, manually cross-referencing KYC logs and watchlist items, introducing latency.
-                </p>
+          <div className="mt-6 space-y-6">
+            <div className="bg-slate-900/60 border border-slate-850 p-6 rounded-2xl">
+              <div className="flex justify-between items-start border-b border-slate-800 pb-4 mb-4">
+                <div>
+                  <h3 className="text-base font-black text-white">Technical Requirements Document (TRD)</h3>
+                  <p className="text-xs text-slate-400 mt-1">v2.4 Final Output - ZIGRAM Compliance Engine</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button 
+                    onClick={() => setShowTrdModal(true)}
+                    className="flex items-center gap-1.5 bg-indigo-500/10 border border-indigo-500/20 text-indigo-405 hover:bg-indigo-500/20 hover:border-indigo-300 text-[10px] uppercase font-bold px-3 py-1.5 rounded-lg transition-all cursor-pointer shadow-sm active:scale-95 flex-shrink-0"
+                  >
+                    <Terminal className="w-3.5 h-3.5" /> View Full TRD (.md)
+                  </button>
+                  <span className="bg-emerald-500/10 text-emerald-400 text-[10px] font-bold px-3 py-1 rounded-full border border-emerald-500/20 hidden sm:inline-block">Deployed to Prod</span>
+                </div>
               </div>
-
-              <div className="bg-slate-900/60 border border-slate-850 p-5 rounded-2xl">
-                <h4 className="text-sm font-bold text-white text-indigo-400">User-Centric Design Choice</h4>
-                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-                  Engineers planned to build a standalone analyst dashboard web portal. However, observation showed introducing another tool created context switching, reducing review rates.
-                </p>
-                <p className="text-xs text-slate-300 font-semibold mt-2.5">
-                  **The Solution:** Instead of a separate portal, we integrated LangGraph risk scoring directly back into their existing transaction queue via REST API. Analysts saw risk parameters directly in the interface they already inhabited.
-                </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+                <div>
+                  <h4 className="font-bold text-slate-300 mb-2 uppercase tracking-wider text-[10px]">Problem Statement</h4>
+                  <p className="text-slate-400 leading-relaxed">
+                    Fraud analyst teams were drowning in volume, manually cross-referencing KYC logs and watchlist items, introducing latency and increasing the risk of human error during peak transaction times.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-300 mb-2 uppercase tracking-wider text-[10px]">Solution Architecture</h4>
+                  <p className="text-slate-400 leading-relaxed">
+                    Rather than building a standalone portal, we integrated LangGraph risk scoring directly back into the existing transaction queue via REST API. Analysts saw risk parameters in their native interface.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-300 mb-2 uppercase tracking-wider text-[10px]">System Constraints</h4>
+                  <ul className="list-disc list-inside text-slate-400 space-y-1 mt-1">
+                    <li>P99 Latency: &lt; 1200ms</li>
+                    <li>Throughput: 500 TPS</li>
+                    <li>Availability: 99.99%</li>
+                    <li>Data: PII Anonymized</li>
+                  </ul>
+                </div>
               </div>
             </div>
 
-            <div className="bg-slate-900/60 border border-slate-850 p-6 rounded-2xl flex flex-col justify-between">
-              <div>
-                <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">System Flow Chart</h4>
-                <div className="space-y-3 font-mono text-[10px] text-slate-400">
-                  <div className="flex items-center gap-2">
-                    <span className="bg-slate-950 px-2 py-1 rounded border border-slate-800 text-indigo-300 font-bold">Kafka Queue</span>
-                    <span className="text-slate-500">→</span>
-                    <span className="bg-slate-950 px-2 py-1 rounded border border-slate-800 text-emerald-300 font-bold">Node Ingest</span>
+            <div className="bg-slate-900/40 border border-slate-850 p-6 rounded-2xl">
+              <h4 className="text-sm font-bold text-white mb-6 flex items-center gap-2">
+                <Network className="w-4 h-4 text-indigo-400" />
+                Event-Driven Architecture Flow
+              </h4>
+              <div className="relative p-6 bg-slate-950/50 rounded-xl border border-slate-800 overflow-hidden">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4 relative z-10">
+                  <div className="bg-slate-900 border border-slate-700 p-5 rounded-xl w-full md:w-1/4 text-center shadow-lg relative group">
+                    <Database className="w-6 h-6 text-indigo-400 mx-auto mb-2" />
+                    <span className="text-xs font-bold text-white block">Kafka Topic</span>
+                    <span className="text-[9px] text-slate-400 font-mono mt-1 block">tx_events_raw</span>
+                    <div className="absolute -top-2 -right-2 bg-indigo-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded animate-pulse">500/s</div>
                   </div>
                   
-                  <div className="border-l-2 border-slate-800 ml-6 h-4" />
-                  
-                  <div className="flex items-center gap-2">
-                    <span className="bg-slate-950 px-2 py-1 rounded border border-slate-800 text-purple-300 font-bold">LangGraph Scorer</span>
-                    <span className="text-slate-500">→</span>
-                    <span className="text-slate-400">ChatOpenAI Model</span>
+                  <ArrowRight className="w-6 h-6 text-slate-600 hidden md:block flex-shrink-0" />
+                  <ArrowDown className="w-6 h-6 text-slate-600 md:hidden flex-shrink-0" />
+
+                  <div className="bg-slate-900 border border-indigo-500/30 p-5 rounded-xl w-full md:w-1/4 text-center shadow-lg shadow-indigo-500/10">
+                    <Cpu className="w-6 h-6 text-purple-400 mx-auto mb-2" />
+                    <span className="text-xs font-bold text-white block">LangGraph Engine</span>
+                    <span className="text-[9px] text-slate-400 font-mono mt-1 block">gpt-4o-mini ruleset</span>
                   </div>
-                  
-                  <div className="border-l-2 border-slate-800 ml-6 h-4" />
-                  
-                  <div className="flex items-center gap-2">
-                    <span className="bg-slate-950 px-2 py-1 rounded border border-slate-800 text-blue-300 font-bold">Push Gateway API</span>
-                    <span className="text-slate-500">→</span>
-                    <span className="bg-slate-950 px-2 py-1 rounded border border-slate-850 text-white font-bold">Workforce Ticket Screen</span>
+
+                  <ArrowRight className="w-6 h-6 text-slate-600 hidden md:block flex-shrink-0" />
+                  <ArrowDown className="w-6 h-6 text-slate-600 md:hidden flex-shrink-0" />
+
+                  <div className="bg-slate-900 border border-slate-700 p-5 rounded-xl w-full md:w-1/4 text-center shadow-lg">
+                    <ShieldCheck className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
+                    <span className="text-xs font-bold text-white block">API Gateway</span>
+                    <span className="text-[9px] text-slate-400 font-mono mt-1 block">Push to Workforce UI</span>
                   </div>
                 </div>
+                
+                <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent -translate-y-1/2 z-0 hidden md:block" />
               </div>
+            </div>
 
-              <div className="pt-4 border-t border-slate-850 mt-4 text-[10px] text-slate-550 leading-relaxed">
-                Aggregated cross-platform KYC signals evaluated via LangGraph. Yielded 85% review rate reduction.
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-emerald-500/10 border border-emerald-500/20 p-5 rounded-xl text-center">
+                <span className="text-2xl font-black text-emerald-400 block mb-1">85%</span>
+                <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">Review Time Saved</span>
+              </div>
+              <div className="bg-indigo-500/10 border border-indigo-500/20 p-5 rounded-xl text-center">
+                <span className="text-2xl font-black text-indigo-400 block mb-1">0.8s</span>
+                <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">Inference Latency</span>
+              </div>
+              <div className="bg-purple-500/10 border border-purple-500/20 p-5 rounded-xl text-center">
+                <span className="text-2xl font-black text-purple-400 block mb-1">Zero</span>
+                <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">Context Switching</span>
               </div>
             </div>
           </div>
@@ -2487,20 +2524,20 @@ export default function Dashboard() {
   return (
     appViewMode === "assignment" ? (
       <div 
-        className="h-screen w-screen bg-slate-950 text-slate-100 flex flex-col font-sans relative overflow-y-auto pb-12"
+        className="h-screen w-full bg-slate-950 text-slate-100 flex flex-col font-sans relative overflow-y-auto overflow-x-hidden pb-12"
         style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
       >
         <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-indigo-500/10 blur-3xl pointer-events-none z-0" />
         <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-purple-500/10 blur-3xl pointer-events-none z-0" />
 
         {toastMessage && (
-          <div className="fixed top-6 right-6 bg-slate-800 text-white text-xs font-bold px-5 py-3.5 rounded-2xl shadow-xl z-50 flex items-center gap-2 border border-slate-700 animate-slide-in">
+          <div className="fixed top-6 right-6 bg-slate-800 text-white text-xs font-bold px-5 py-3.5 rounded-2xl shadow-xl z-[100] flex items-center gap-2 border border-slate-700 animate-slide-in">
             <Sparkles className="w-4 h-4 text-yellow-400 animate-pulse" />
             <span>{toastMessage}</span>
           </div>
         )}
 
-        <header className="border-b border-slate-850 bg-slate-950/80 backdrop-blur-md px-6 lg:px-12 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 z-10 sticky top-0 flex-shrink-0">
+        <header className="border-b border-slate-850 bg-slate-950/80 backdrop-blur-md px-6 lg:px-12 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 relative z-10 flex-shrink-0 w-full">
           <div className="flex items-center gap-4">
             <div className="bg-gradient-to-tr from-indigo-600 to-violet-600 p-2.5 rounded-2xl shadow-lg shadow-indigo-500/30">
               <Activity className="text-white w-6 h-6 animate-pulse" />
@@ -2621,8 +2658,8 @@ export default function Dashboard() {
         </main>
 
         {showDesignDocModal && (
-          <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-            <div className="bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl w-full max-w-4xl max-h-[85vh] overflow-hidden flex flex-col animate-slide-in">
+          <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 lg:p-8">
+            <div className="bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col animate-slide-in">
               <div className="bg-gradient-to-r from-indigo-950 to-slate-900 text-white px-6 py-4 flex justify-between items-center border-b border-slate-850">
                 <div className="flex items-center gap-2">
                   <Terminal className="w-5 h-5 text-indigo-400" />
@@ -2666,23 +2703,70 @@ export default function Dashboard() {
             </div>
           </div>
         )}
+
+        {showTrdModal && (
+          <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 lg:p-8">
+            <div className="bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col animate-slide-in">
+              <div className="bg-gradient-to-r from-purple-950 to-slate-900 text-white px-6 py-4 flex justify-between items-center border-b border-slate-850">
+                <div className="flex items-center gap-2">
+                  <Terminal className="w-5 h-5 text-purple-400" />
+                  <div>
+                    <h4 className="font-extrabold text-sm uppercase tracking-wider">ZIGRAM_TRD.md</h4>
+                    <p className="text-[10px] text-slate-500 font-mono">Fraud Fighter AI Compliance Engine</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <button 
+                    onClick={() => {
+                      navigator.clipboard.writeText(ZIGRAM_TRD_MD);
+                      showToast("Raw TRD markdown copied to clipboard!");
+                    }}
+                    className="text-[10px] font-bold text-purple-405 hover:text-purple-300 bg-purple-500/10 border border-purple-500/20 py-2 px-3.5 rounded-lg flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+                  >
+                    <Copy className="w-3 h-3" /> Copy Raw Markdown
+                  </button>
+                  <button 
+                    onClick={() => setShowTrdModal(false)}
+                    className="text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-6 overflow-y-auto flex-1 space-y-4 max-h-[70vh] bg-slate-950/20 font-sans">
+                {parseMarkdown(ZIGRAM_TRD_MD)}
+              </div>
+
+              <div className="bg-slate-950/80 px-6 py-4 border-t border-slate-850 flex justify-end gap-3">
+                <button 
+                  onClick={() => setShowTrdModal(false)}
+                  className="text-xs font-bold text-slate-350 bg-slate-850 hover:bg-slate-805 border border-slate-700 py-2.5 px-5 rounded-xl transition-all cursor-pointer"
+                >
+                  Close TRD
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     ) : (
       <div 
-        className="h-screen w-screen bg-gradient-to-br from-indigo-50/60 via-slate-50 to-purple-50/50 text-slate-800 flex flex-col font-sans relative overflow-y-auto lg:overflow-hidden"
+        className="h-screen w-full bg-gradient-to-br from-indigo-50/60 via-slate-50 to-purple-50/50 text-slate-800 flex flex-col font-sans relative overflow-y-auto overflow-x-hidden lg:overflow-hidden"
         style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
       >
         <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-200/40 blur-3xl pointer-events-none z-0" />
         <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-purple-200/40 blur-3xl pointer-events-none z-0" />
 
         {toastMessage && (
-          <div className="fixed top-6 right-6 bg-slate-900 text-white text-xs font-bold px-5 py-3.5 rounded-2xl shadow-xl z-50 flex items-center gap-2 border border-slate-700 animate-slide-in">
+          <div className="fixed top-6 right-6 bg-slate-900 text-white text-xs font-bold px-5 py-3.5 rounded-2xl shadow-xl z-[100] flex items-center gap-2 border border-slate-700 animate-slide-in">
             <Sparkles className="w-4 h-4 text-yellow-400 animate-pulse" />
             <span>{toastMessage}</span>
           </div>
         )}
 
-        <header className="border-b border-indigo-100/60 bg-white/70 backdrop-blur-md px-4 lg:px-8 py-3 flex flex-row justify-between items-center gap-3 shadow-sm z-10 sticky top-0 flex-shrink-0">
+        <header className="border-b border-indigo-100/60 bg-white/70 backdrop-blur-md px-4 lg:px-8 py-3 flex flex-row justify-between items-center gap-3 shadow-sm relative z-10 flex-shrink-0 w-full">
           <div className="flex items-center gap-4">
             <div className="bg-gradient-to-tr from-indigo-600 to-violet-600 p-2.5 rounded-2xl shadow-lg shadow-indigo-500/20">
               <Activity className="text-white w-6 h-6 animate-pulse" />
@@ -3341,6 +3425,14 @@ const parseMarkdown = (text: string) => {
   let inCodeBlock = false;
   let codeContent: string[] = [];
   
+  const formatInline = (str: string) => {
+    let formatted = str
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/`(.*?)`/g, '<code class="bg-slate-900 px-1 py-0.5 rounded border border-slate-800 text-indigo-300 font-mono text-[10.5px]">$1</code>');
+    return { __html: formatted };
+  };
+  
   return lines.map((line, idx) => {
     if (line.startsWith("```")) {
       if (inCodeBlock) {
@@ -3364,20 +3456,20 @@ const parseMarkdown = (text: string) => {
     }
     
     if (line.startsWith("# ")) {
-      return <h1 key={idx} className="text-xl lg:text-2xl font-black text-white mt-6 mb-3 border-b border-slate-800 pb-2">{line.replace("# ", "")}</h1>;
+      return <h1 key={idx} className="text-xl lg:text-2xl font-black text-white mt-6 mb-3 border-b border-slate-800 pb-2" dangerouslySetInnerHTML={formatInline(line.replace("# ", ""))} />;
     }
     if (line.startsWith("## ")) {
-      return <h2 key={idx} className="text-base lg:text-lg font-black text-indigo-400 mt-5 mb-2.5 flex items-center gap-2">{line.replace("## ", "")}</h2>;
+      return <h2 key={idx} className="text-base lg:text-lg font-black text-indigo-400 mt-5 mb-2.5 flex items-center gap-2" dangerouslySetInnerHTML={formatInline(line.replace("## ", ""))} />;
     }
     if (line.startsWith("### ")) {
-      return <h3 key={idx} className="text-sm font-extrabold text-white mt-4 mb-2">{line.replace("### ", "")}</h3>;
+      return <h3 key={idx} className="text-sm font-extrabold text-white mt-4 mb-2" dangerouslySetInnerHTML={formatInline(line.replace("### ", ""))} />;
     }
     if (line.startsWith("#### ")) {
-      return <h4 key={idx} className="text-xs font-bold text-slate-300 mt-3 mb-1.5">{line.replace("#### ", "")}</h4>;
+      return <h4 key={idx} className="text-xs font-bold text-slate-300 mt-3 mb-1.5" dangerouslySetInnerHTML={formatInline(line.replace("#### ", ""))} />;
     }
     if (line.trim().startsWith("* ") || line.trim().startsWith("- ")) {
       const content = line.trim().substring(2);
-      return <li key={idx} className="ml-5 list-disc text-xs text-slate-400 my-1 leading-relaxed">{content}</li>;
+      return <li key={idx} className="ml-5 list-disc text-xs text-slate-400 my-1 leading-relaxed" dangerouslySetInnerHTML={formatInline(content)} />;
     }
     if (line === "---" || line === "***") {
       return <hr key={idx} className="border-slate-800 my-4" />;
@@ -3396,15 +3488,75 @@ const parseMarkdown = (text: string) => {
       return (
         <div key={idx} className="grid grid-cols-3 gap-2 py-2 px-3 hover:bg-slate-900/20 text-[11px] border-b border-slate-850 text-slate-400">
           {cells.map((cell, cIdx) => (
-            <span key={cIdx} className={cIdx === 0 ? "font-bold text-white" : ""}>{cell}</span>
+            <span key={cIdx} className={cIdx === 0 ? "font-bold text-white" : ""} dangerouslySetInnerHTML={formatInline(cell)} />
           ))}
         </div>
       );
     }
     
-    return <p key={idx} className="text-xs text-slate-400 leading-relaxed my-1.5">{line}</p>;
+    return <p key={idx} className="text-xs text-slate-400 leading-relaxed my-1.5" dangerouslySetInnerHTML={formatInline(line)} />;
   });
 };
+
+const ZIGRAM_TRD_MD = `# 🛡️ Technical Requirements Document: ZIGRAM Fraud Fighter AI Engine
+
+This document outlines the system architecture, performance boundaries, and risk decision nodes for the ZIGRAM Automated Compliance Scoring Engine deployed to production.
+
+---
+
+## 1. Executive Summary
+The Fraud Fighter AI Engine evaluates massive streams of incoming transaction data against historical KYC profiles and designated global watchlists. It utilizes an event-driven architecture with **Kafka**, processed asynchronously via a **LangGraph state machine**, and evaluates rules using a fine-tuned GPT logic module. The output is pushed via REST gateway directly into the existing analyst workforce queue.
+
+## 2. Infrastructure & System Topography
+
+### Event Ingestion Layer
+* **Broker:** Apache Kafka (Confluent Cloud)
+* **Topic:** \`tx_events_raw_v1\`
+* **Throughput:** Configured to handle a sustained 500 TPS (Transactions Per Second).
+* **Payload Structure:** A serialized JSON object containing user metadata, IP origin, transaction velocity window, and cross-border bank bin codes.
+
+### Synthesis & Risk Node (LangGraph)
+* **Execution Environment:** Python worker nodes deployed via Kubernetes (EKS).
+* **Graph Structure:** 
+  1. \`node_ingest_parse\`: Sanitizes and extracts PII hash tokens.
+  2. \`node_watchlist_check\`: Cross-references tokens against high-risk internal Redis cache.
+  3. \`node_llm_evaluator\`: Queries \`gpt-4o-mini\` with context if complex multi-vector fraud is detected (e.g. impossible travel velocity).
+* **Latency Guarantee:** Maximum permitted inference latency is strictly bound to < 1200ms per event.
+
+### Output Gateway
+* **Interface:** REST POST webhook targeting the \`/api/v3/analyst/queue/append\` endpoint.
+* **Auth:** Mutual TLS (mTLS) combined with rotating JWT bearer tokens.
+
+---
+
+## 3. The Pydantic Data Schema
+The output schema passed to the Workforce Queue is strictly typed to ensure downstream UI compatibility:
+
+\`\`\`python
+class FraudRiskAssessment(BaseModel):
+    transaction_id: str
+    user_hash: str
+    risk_status: Literal["PASS", "MANUAL_REVIEW", "AUTO_REJECT"]
+    confidence_score: float = Field(ge=0.0, le=1.0)
+    risk_vectors_identified: List[str]
+    analyst_context_summary: str
+\`\`\`
+
+## 4. User-Centric Design Logic
+To reduce *context switching*, the analysts do NOT log into a separate "Fraud Engine Dashboard." Instead, the \`analyst_context_summary\` and \`risk_vectors_identified\` fields map directly into the existing CRM ticket. The result: analysts see all the relevant, processed KYC data directly inside the same review interface they have used for years, increasing workflow speed by 85%.
+
+---
+
+## 5. Security & Fallback Scenarios
+
+### 5.1 LLM Provider Outage
+If the OpenAI API endpoint times out or returns HTTP 500/503:
+* **Circuit Breaker:** The LangGraph state machine triggers the \`edge_fallback_rule\` router.
+* **Deterministic Ruleset:** Events are scored against static rules (e.g., if IP is from a sanctioned country = AUTO_REJECT). This ensures the 500 TPS stream is not blocked.
+
+### 5.2 PII Protection Boundaries
+The LLM is completely blind to PII. Names, exact account numbers, and addresses are hashed before leaving the boundary. The model evaluates *behavioral metadata* (e.g., "Account created 12 minutes ago attempted 4 high-value transfers") rather than personal identities.
+`;
 
 const NOTION_DESIGN_DOC_MD = `# 📐 Technical Design Document: Enterprise CSM Portfolio Automation Engine
 
