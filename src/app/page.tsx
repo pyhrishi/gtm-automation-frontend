@@ -2263,10 +2263,10 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <main className="flex-1 min-h-0 overflow-hidden px-8 pb-4 grid grid-cols-12 gap-6 z-10 relative">
+      <main className="flex-1 min-h-0 overflow-hidden px-8 pb-4 flex flex-row gap-6 z-10 relative">
         
-        <div className="col-span-4 flex flex-col h-full min-h-0">
-          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col h-full min-h-0 overflow-hidden">
+        <div className="w-1/3 flex-shrink-0 flex flex-col min-h-0">
+          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col flex-1 min-h-0 overflow-hidden">
             <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/60 flex-shrink-0">
               <div>
                 <h3 className="font-extrabold text-slate-900 text-sm tracking-wide">Portfolio Directory</h3>
@@ -2336,7 +2336,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="col-span-4 flex flex-col gap-4 h-full min-h-0">
+        <div className="w-1/3 flex-shrink-0 flex flex-col gap-4 min-h-0">
           
           <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col p-5 gap-3 h-[57%] min-h-0 overflow-hidden">
             <div className="flex justify-between items-start border-b border-slate-100 pb-3 flex-shrink-0">
@@ -2483,9 +2483,9 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="col-span-4 flex flex-col h-full min-h-0">
+        <div className="w-1/3 flex-shrink-0 flex flex-col min-h-0">
           
-          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col h-full min-h-0 overflow-hidden">
+          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col flex-1 min-h-0 overflow-hidden">
             
             <div className="px-5 py-3 border-b border-slate-100 bg-slate-50/60 flex justify-between items-center flex-shrink-0">
               <div>
