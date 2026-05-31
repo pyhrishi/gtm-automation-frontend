@@ -2974,7 +2974,7 @@ Enterprise Customer Success Team`;
 
         <div className="w-full lg:w-1/3 lg:flex-shrink-0 flex flex-col gap-4">
           
-          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col p-5 gap-3 min-h-[380px] lg:h-[57%] lg:min-h-0 overflow-hidden">
+          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col p-5 gap-3 overflow-hidden">
             <div className="flex justify-between items-start border-b border-slate-100 pb-3 flex-shrink-0">
               <div>
                 <span className="bg-indigo-50 border border-indigo-100 text-indigo-700 text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
@@ -3044,7 +3044,7 @@ Enterprise Customer Success Team`;
             </div>
           </div>
 
-          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col min-h-[320px] lg:h-[43%] lg:min-h-0 overflow-hidden">
+          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col overflow-hidden">
             <div className="px-5 py-3 border-b border-slate-100 bg-slate-50/60 flex justify-between items-center flex-shrink-0">
               <div>
                 <h3 className="font-extrabold text-slate-900 text-sm tracking-wide">Action Playbooks</h3>
