@@ -2134,17 +2134,20 @@ export default function Dashboard() {
   const completedActionsCount = allActions.filter(a => checkedActions.includes(a.id)).length;
   const totalActionsCount = allActions.length;
   const completionPercentage = totalActionsCount > 0 ? Math.round((completedActionsCount / totalActionsCount) * 100) : 0;
+  const formatARR = (val: number) => {
+    if (val >= 1000000) return `$${(val / 1000000).toFixed(2)}M`;
+    if (val >= 1000) return `$${(val / 1000).toFixed(0)}K`;
+    return `$${val}`;
+  };
 
   return (
     <div 
-      className="min-h-screen bg-gradient-to-br from-indigo-50/60 via-slate-50 to-purple-50/50 text-slate-800 flex flex-col font-sans relative overflow-hidden"
+      className="h-screen bg-gradient-to-br from-indigo-50/60 via-slate-50 to-purple-50/50 text-slate-800 flex flex-col font-sans relative overflow-hidden"
       style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
-      {/* Decorative Blur Spheres for Glassmorphism Background */}
       <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-200/40 blur-3xl pointer-events-none z-0" />
       <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-purple-200/40 blur-3xl pointer-events-none z-0" />
 
-      {/* Global Interactive Notification Toast */}
       {toastMessage && (
         <div className="fixed top-6 right-6 bg-slate-900 text-white text-xs font-bold px-5 py-3.5 rounded-2xl shadow-xl z-50 flex items-center gap-2 border border-slate-700 animate-slide-in">
           <Sparkles className="w-4 h-4 text-yellow-400 animate-pulse" />
@@ -2152,8 +2155,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* TOP HEADER */}
-      <header className="border-b border-indigo-100/60 bg-white/70 backdrop-blur-md px-8 py-5 flex flex-col md:flex-row justify-between items-center gap-4 shadow-sm z-10 sticky top-0">
+      <header className="border-b border-indigo-100/60 bg-white/70 backdrop-blur-md px-8 py-3 flex flex-col md:flex-row justify-between items-center gap-4 shadow-sm z-10 sticky top-0 flex-shrink-0">
         <div className="flex items-center gap-4">
           <div className="bg-gradient-to-tr from-indigo-600 to-violet-600 p-2.5 rounded-2xl shadow-lg shadow-indigo-500/20">
             <Activity className="text-white w-6 h-6 animate-pulse" />
@@ -2173,7 +2175,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Dynamic CSM Selector with custom styling */}
         <div className="flex items-center gap-3 bg-white/90 border border-slate-200 shadow-md px-4 py-2.5 rounded-2xl transition-all hover:border-indigo-300">
           <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 text-white flex items-center justify-center font-bold text-sm shadow-sm">
             {activePortfolio.csmName.split(" ").map(n => n[0]).join("")}
@@ -2199,88 +2200,79 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {/* METRICS DASHBOARD RIBBON */}
-      <section className="px-8 pt-8 pb-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 z-10">
-        {/* Total Accounts */}
-        <div className="bg-white/90 backdrop-blur-md border border-indigo-100/50 p-6 rounded-3xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-indigo-500/5 hover:-translate-y-1 hover:border-indigo-200/80 transition-all duration-300 group">
+      <section className="px-8 pt-4 pb-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 z-10 flex-shrink-0 min-h-0">
+        <div className="bg-white/90 backdrop-blur-md border border-indigo-100/50 p-4 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-indigo-500/5 hover:-translate-y-0.5 hover:border-indigo-200/80 transition-all duration-300 group">
           <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Portfolio Accounts</p>
-            <h3 className="text-3xl font-extrabold text-slate-950 tracking-tight">{totalAccounts} Clients</h3>
-            <p className="text-[11px] font-semibold text-slate-600 mt-1.5 flex items-center gap-1">
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Portfolio Size</p>
+            <h3 className="text-xl font-extrabold text-slate-950 tracking-tight">{totalAccounts} Clients</h3>
+            <p className="text-[11px] font-semibold text-slate-600 mt-1 flex items-center gap-1">
               <Users className="w-3.5 h-3.5 text-indigo-500" /> Active relationships
             </p>
           </div>
-          <div className="bg-indigo-50 p-4 rounded-2xl text-indigo-600 border border-indigo-100 group-hover:scale-110 transition-transform">
-            <Layout className="w-6 h-6" />
+          <div className="bg-indigo-50 p-3 rounded-xl text-indigo-600 border border-indigo-100 group-hover:scale-105 transition-transform">
+            <Layout className="w-5 h-5" />
           </div>
         </div>
 
-        {/* Portfolio ARR */}
-        <div className="bg-white/90 backdrop-blur-md border border-emerald-100/50 p-6 rounded-3xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-emerald-500/5 hover:-translate-y-1 hover:border-emerald-200/80 transition-all duration-300 group">
+        <div className="bg-white/90 backdrop-blur-md border border-emerald-100/50 p-4 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-emerald-500/5 hover:-translate-y-0.5 hover:border-emerald-200/80 transition-all duration-300 group">
           <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Managed ARR</p>
-            <h3 className="text-3xl font-extrabold text-slate-950 tracking-tight">${totalArr.toLocaleString()}</h3>
-            <p className="text-[11px] font-semibold text-emerald-700 mt-1.5 flex items-center gap-1">
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Managed ARR</p>
+            <h3 className="text-xl font-extrabold text-slate-950 tracking-tight">{formatARR(totalArr)}</h3>
+            <p className="text-[11px] font-semibold text-emerald-700 mt-1 flex items-center gap-1">
               <TrendingUp className="w-3.5 h-3.5" /> Direct contract value
             </p>
           </div>
-          <div className="bg-emerald-50 p-4 rounded-2xl text-emerald-600 border border-emerald-100 group-hover:scale-110 transition-transform">
-            <DollarSign className="w-6 h-6" />
+          <div className="bg-emerald-50 p-3 rounded-xl text-emerald-600 border border-emerald-100 group-hover:scale-105 transition-transform">
+            <DollarSign className="w-5 h-5" />
           </div>
         </div>
 
-        {/* Avg Health */}
-        <div className="bg-white/90 backdrop-blur-md border border-blue-100/50 p-6 rounded-3xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-blue-500/5 hover:-translate-y-1 hover:border-blue-200/80 transition-all duration-300 group">
+        <div className="bg-white/90 backdrop-blur-md border border-blue-100/50 p-4 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-blue-500/5 hover:-translate-y-0.5 hover:border-blue-200/80 transition-all duration-300 group">
           <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Portfolio Health</p>
-            <h3 className="text-3xl font-extrabold text-slate-950 tracking-tight">{avgHealth} / 10</h3>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Avg Health Score</p>
+            <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">{avgHealth} / 10</h3>
             
-            {/* Visual health bar indicator */}
-            <div className="w-24 bg-slate-100 h-1.5 rounded-full mt-2.5 overflow-hidden">
+            <div className="w-24 bg-slate-100 h-1 rounded-full mt-2 overflow-hidden">
               <div 
                 className={`h-full rounded-full ${avgHealth >= 7.5 ? 'bg-emerald-500' : avgHealth >= 6.0 ? 'bg-amber-500' : 'bg-rose-500'}`} 
                 style={{ width: `${avgHealth * 10}%` }}
               />
             </div>
           </div>
-          <div className="bg-blue-50 p-4 rounded-2xl text-blue-600 border border-blue-100 group-hover:scale-110 transition-transform">
-            <Heart className="w-6 h-6 fill-blue-500" />
+          <div className="bg-blue-50 p-3 rounded-xl text-blue-600 border border-blue-100 group-hover:scale-105 transition-transform">
+            <Heart className="w-5 h-5 fill-blue-500" />
           </div>
         </div>
 
-        {/* Churn Risks */}
-        <div className="bg-white/95 backdrop-blur-md border border-rose-100 p-6 rounded-3xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-rose-500/5 hover:-translate-y-1 hover:border-rose-200 transition-all duration-300 relative overflow-hidden group">
+        <div className="bg-white/95 backdrop-blur-md border border-rose-100 p-4 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-rose-500/5 hover:-translate-y-0.5 hover:border-rose-200 transition-all duration-300 relative overflow-hidden group">
           {criticalCount > 0 && (
-            <div className="bg-gradient-to-b from-rose-500 to-pink-600 w-1.5 h-full absolute left-0 top-0 animate-pulse" />
+            <div className="bg-gradient-to-b from-rose-500 to-pink-600 w-1 absolute left-0 top-0 h-full animate-pulse" />
           )}
           <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Contract Risk Pool</p>
-            <h3 className={`text-3xl font-extrabold ${criticalCount > 0 ? 'text-rose-600' : 'text-emerald-600'} tracking-tight`}>
-              ${arrAtRisk.toLocaleString()}
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Risk ARR Pool</p>
+            <h3 className={`text-xl font-extrabold ${criticalCount > 0 ? 'text-rose-600' : 'text-emerald-600'} tracking-tight`}>
+              {formatARR(arrAtRisk)}
             </h3>
-            <p className="text-[11px] font-semibold text-slate-500 mt-1.5">
+            <p className="text-[11px] font-semibold text-slate-500 mt-1">
               {criticalCount} critical risk accounts
             </p>
           </div>
-          <div className={`p-4 rounded-2xl border group-hover:scale-110 transition-transform ${criticalCount > 0 ? 'bg-rose-50 text-rose-600 border-rose-100 animate-pulse' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
-            {criticalCount > 0 ? <ShieldAlert className="w-6 h-6" /> : <ShieldCheck className="w-6 h-6" />}
+          <div className={`p-3 rounded-xl border group-hover:scale-105 transition-transform ${criticalCount > 0 ? 'bg-rose-50 text-rose-600 border-rose-100 animate-pulse' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
+            {criticalCount > 0 ? <ShieldAlert className="w-5 h-5" /> : <ShieldCheck className="w-5 h-5" />}
           </div>
         </div>
       </section>
 
-      {/* THREE-COLUMN DENSE WORKSPACE */}
-      <main className="flex-1 px-8 pb-8 grid grid-cols-1 xl:grid-cols-12 gap-8 z-10 relative">
+      <main className="flex-1 min-h-0 overflow-hidden px-8 pb-4 grid grid-cols-1 xl:grid-cols-12 gap-6 z-10 relative">
         
-        {/* COLUMN 1: Accounts & Portfolio Grid (4 Cols) */}
-        <div className="xl:col-span-4 flex flex-col gap-6">
-          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col flex-1 max-h-[750px] overflow-hidden">
-            <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/60">
+        <div className="xl:col-span-4 flex flex-col h-full min-h-0">
+          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col h-full min-h-0 overflow-hidden">
+            <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/60 flex-shrink-0">
               <div>
                 <h3 className="font-extrabold text-slate-900 text-sm tracking-wide">Portfolio Directory</h3>
                 <p className="text-xs text-slate-600 mt-0.5">Select a client below to hydrate details</p>
               </div>
               
-              {/* Sync Trigger Button */}
               <button
                 onClick={triggerAutomation}
                 disabled={loading}
@@ -2291,7 +2283,7 @@ export default function Dashboard() {
               </button>
             </div>
 
-            <div className="overflow-y-auto flex-1 p-4 space-y-3 bg-slate-50/20">
+            <div className="overflow-y-auto flex-1 p-4 space-y-3 bg-slate-50/20 min-h-0">
               {accounts.map((acc) => {
                 const isSelected = selectedAccount === acc.id;
                 const isCrit = acc.status === "CRITICAL";
@@ -2344,102 +2336,95 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* COLUMN 2: Account Detail Hub & Actions (4 Cols) */}
-        <div className="xl:col-span-4 flex flex-col gap-6">
+        <div className="xl:col-span-4 flex flex-col gap-4 h-full min-h-0">
           
-          {/* Account Detail Hub */}
-          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col p-6 gap-4 min-h-[380px]">
-            <div className="flex justify-between items-start border-b border-slate-100 pb-4">
+          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col p-5 gap-3 h-[57%] min-h-0 overflow-hidden">
+            <div className="flex justify-between items-start border-b border-slate-100 pb-3 flex-shrink-0">
               <div>
                 <span className="bg-indigo-50 border border-indigo-100 text-indigo-700 text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
                   Active Account Hub
                 </span>
-                <h3 className="font-extrabold text-slate-900 text-lg tracking-tight mt-1">
+                <h3 className="font-extrabold text-slate-900 text-base tracking-tight mt-0.5">
                   {activeAccountData.name}
                 </h3>
               </div>
               <div className="text-right">
                 <span className="text-[10px] text-slate-500 font-semibold block uppercase tracking-wider">NPS Rating</span>
-                <span className="text-sm font-bold text-indigo-950 flex items-center justify-end gap-1">
-                  <Award className="w-4 h-4 text-yellow-500 fill-yellow-500" /> {activeAccountData.nps} / 10
+                <span className="text-xs font-bold text-indigo-700 flex items-center justify-end gap-0.5">
+                  <Award className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" /> {activeAccountData.nps} / 10
                 </span>
               </div>
             </div>
 
-            {/* Salesforce CPQ Card */}
-            <div className="bg-slate-50 border border-slate-200/60 rounded-2xl p-4 flex flex-col gap-3">
-              <span className="text-[10px] font-bold text-indigo-900 uppercase tracking-widest flex items-center gap-1.5">
+            <div className="bg-slate-50 border border-slate-200/60 rounded-xl p-3.5 flex flex-col gap-2 flex-shrink-0">
+              <span className="text-[10px] font-bold text-indigo-900 uppercase tracking-widest flex items-center gap-1.5 leading-none">
                 <Building className="w-3.5 h-3.5" /> Salesforce Opportunities
               </span>
-              <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="grid grid-cols-2 gap-2 text-[11px] leading-tight">
                 <div>
                   <span className="text-slate-500 block">Renewal Stage</span>
                   <span className="font-bold text-slate-800">{activeAccountData.contractStage}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block">Renewal Opportunity</span>
+                  <span className="text-slate-500 block">Renewal Opp</span>
                   <span className="font-mono font-bold text-slate-800">${activeAccountData.sfdcOppValue.toLocaleString()}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block">Contract End Date</span>
-                  <span className="font-bold text-slate-800 flex items-center gap-1.5">
+                  <span className="text-slate-500 block">Contract End</span>
+                  <span className="font-bold text-slate-800 flex items-center gap-1">
                     <Calendar className="w-3.5 h-3.5 text-slate-500" /> {activeAccountData.renewal}
                   </span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block">Primary Stakeholder</span>
+                  <span className="text-slate-500 block">Primary Contact</span>
                   <span className="font-bold text-slate-800 block truncate">{activeAccountData.primaryContact}</span>
-                  <span className="text-[9px] text-slate-500 leading-none">{activeAccountData.contactRole}</span>
+                  <span className="text-[9px] text-slate-500 leading-none block truncate">{activeAccountData.contactRole}</span>
                 </div>
               </div>
             </div>
 
-            {/* Weflow Conversational Context */}
-            <div className="flex-1 flex flex-col gap-2">
-              <span className="text-[10px] font-bold text-violet-900 uppercase tracking-widest flex items-center gap-1.5">
+            <div className="flex-1 overflow-y-auto min-h-0 flex flex-col gap-1.5">
+              <span className="text-[10px] font-bold text-violet-900 uppercase tracking-widest flex items-center gap-1.5 flex-shrink-0">
                 <MessageSquare className="w-3.5 h-3.5" /> Conversation Intelligence (Weflow)
               </span>
-              <p className="text-xs text-slate-700 leading-relaxed bg-violet-50/20 border border-violet-100/50 p-3 rounded-2xl">
+              <p className="text-xs text-slate-700 leading-relaxed bg-violet-50/20 border border-violet-100/50 p-3 rounded-2xl overflow-y-auto flex-1">
                 {activeAccountData.summary}
               </p>
             </div>
 
-            {/* Quick Actions Panel */}
-            <div className="grid grid-cols-2 gap-3 pt-2">
+            <div className="grid grid-cols-2 gap-3 pt-2 flex-shrink-0">
               <button 
                 onClick={() => openEmailDraft(activeAccountData)}
-                className="flex items-center justify-center gap-1.5 bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 text-xs font-bold py-2.5 px-3 rounded-xl transition-all duration-200"
+                className="flex items-center justify-center gap-1.5 bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 text-xs font-bold py-2 px-3 rounded-xl transition-all duration-200"
               >
                 <Mail className="w-3.5 h-3.5" /> Draft Escalation
               </button>
               <button 
                 onClick={() => showToast("CPQ Sync Request forwarded to Ops.")}
-                className="flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2.5 px-3 rounded-xl transition-all duration-200"
+                className="flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2 px-3 rounded-xl transition-all duration-200"
               >
                 <RefreshCw className="w-3.5 h-3.5 text-slate-500" /> Sync CRM Data
               </button>
             </div>
           </div>
 
-          {/* Consolidated Action Center */}
-          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col flex-1 max-h-[350px] overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex justify-between items-center">
+          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col h-[43%] min-h-0 overflow-hidden">
+            <div className="px-5 py-3 border-b border-slate-100 bg-slate-50/60 flex justify-between items-center flex-shrink-0">
               <div>
                 <h3 className="font-extrabold text-slate-900 text-sm tracking-wide">Action Playbooks</h3>
                 <p className="text-xs text-slate-600 mt-0.5">Tasks generated by Weflow transcripts</p>
               </div>
-              <span className="bg-slate-100 border border-slate-200 text-slate-700 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider">
+              <span className="bg-slate-100 border border-slate-200 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-lg uppercase tracking-wider">
                 {completedActionsCount} / {totalActionsCount} Done
               </span>
             </div>
 
-            {/* Action Progress Bar */}
-            <div className="px-6 pt-3 pb-1">
+            <div className="px-5 pt-3 pb-1 flex-shrink-0">
               <div className="flex justify-between items-center text-[10px] font-bold text-slate-500 uppercase mb-1">
                 <span>Playbook Completion</span>
                 <span>{completionPercentage}%</span>
               </div>
-              <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden border border-slate-200/50">
+              <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden border border-slate-200/50">
                 <div 
                   className="bg-gradient-to-r from-indigo-500 to-violet-500 h-full rounded-full transition-all duration-500" 
                   style={{ width: `${completionPercentage}%` }}
@@ -2447,9 +2432,9 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="p-6 overflow-y-auto flex-1 space-y-3.5">
+            <div className="p-4 overflow-y-auto flex-1 space-y-3 min-h-0 bg-slate-50/10">
               {allActions.length === 0 ? (
-                <div className="text-center py-8 text-slate-500 text-xs font-semibold">
+                <div className="text-center py-6 text-slate-500 text-xs font-semibold">
                   No action items identified for this portfolio.
                 </div>
               ) : (
@@ -2459,21 +2444,20 @@ export default function Dashboard() {
                     <div 
                       key={action.id}
                       onClick={() => toggleAction(action.id)}
-                      className={`flex items-start gap-3.5 p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer select-none
+                      className={`flex items-start gap-3 p-3 rounded-xl border transition-all duration-200 cursor-pointer select-none
                         ${isChecked 
                           ? 'bg-slate-50/80 border-slate-100 opacity-60' 
                           : action.isCritical 
                             ? 'bg-rose-50/40 border-rose-100 hover:border-rose-200 hover:bg-rose-50/80' 
                             : 'bg-white border-slate-200/60 hover:border-indigo-300 hover:bg-indigo-50/10'}`}
                     >
-                      {/* Checkbox button */}
                       <button className="flex-shrink-0 mt-0.5 focus:outline-none">
                         {isChecked ? (
-                          <div className="w-4.5 h-4.5 rounded-md bg-indigo-600 text-white flex items-center justify-center border border-indigo-600 transition-colors">
-                            <Check className="w-3.5 h-3.5 stroke-[3]" />
+                          <div className="w-4 h-4 rounded bg-indigo-600 text-white flex items-center justify-center border border-indigo-600 transition-colors">
+                            <Check className="w-3 h-3 stroke-[3]" />
                           </div>
                         ) : (
-                          <div className={`w-4.5 h-4.5 rounded-md border ${action.isCritical ? 'border-rose-400 hover:border-rose-600' : 'border-slate-300 hover:border-indigo-500'} bg-white transition-colors`} />
+                          <div className={`w-4 h-4 rounded border ${action.isCritical ? 'border-rose-400 hover:border-rose-600' : 'border-slate-300 hover:border-indigo-500'} bg-white transition-colors`} />
                         )}
                       </button>
                       
@@ -2481,7 +2465,7 @@ export default function Dashboard() {
                         <p className={`text-xs font-semibold ${isChecked ? 'line-through text-slate-500' : 'text-slate-900'}`}>
                           {action.text}
                         </p>
-                        <div className="flex items-center gap-2 mt-1.5">
+                        <div className="flex items-center gap-2 mt-1">
                           <span className="text-[9px] font-extrabold uppercase text-slate-500 tracking-wider">
                             {action.accountName}
                           </span>
@@ -2499,20 +2483,16 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* COLUMN 3: Slack Briefing Simulator & Code Console (4 Cols) */}
-        <div className="xl:col-span-4 flex flex-col gap-6">
+        <div className="xl:col-span-4 flex flex-col h-full min-h-0">
           
-          {/* Slack Briefing Card */}
-          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col flex-1 min-h-[500px] overflow-hidden">
+          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col h-full min-h-0 overflow-hidden">
             
-            {/* Header */}
-            <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex justify-between items-center">
+            <div className="px-5 py-3 border-b border-slate-100 bg-slate-50/60 flex justify-between items-center flex-shrink-0">
               <div>
                 <h3 className="font-extrabold text-slate-900 text-sm tracking-wide">Slack Gateway Simulator</h3>
                 <p className="text-xs text-slate-600 mt-0.5">Visualize channel delivery vectors</p>
               </div>
 
-              {/* View Mode Toggle */}
               <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
                 <button 
                   onClick={() => setViewMode("ui")}
@@ -2537,22 +2517,19 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Viewport Content */}
-            <div className="flex-1 overflow-y-auto p-4 bg-slate-50/30 flex flex-col justify-between">
+            <div className="flex-1 min-h-0 p-4 bg-slate-50/30 flex flex-col">
               
-              {/* SLACK UI MODE */}
               {viewMode === "ui" && (
-                <div className="bg-white rounded-2xl border border-slate-200/80 shadow-md flex flex-col h-full min-h-[380px] overflow-hidden">
+                <div className="bg-white rounded-2xl border border-slate-200/80 shadow-md flex flex-col h-full min-h-0 overflow-hidden">
                   
-                  {/* Slack Sidebar + Channel mockup layout */}
-                  <div className="bg-[#3F0E40] px-4 py-3 flex items-center justify-between border-b border-[#522653]">
+                  <div className="bg-[#3F0E40] px-4 py-2.5 flex items-center justify-between border-b border-[#522653] flex-shrink-0">
                     <div className="flex items-center gap-2">
                       <div className="flex gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full bg-[#EC6A5E]" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-[#F4BF4F]" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-[#61C554]" />
+                        <div className="w-2 h-2 rounded-full bg-[#EC6A5E]" />
+                        <div className="w-2 h-2 rounded-full bg-[#F4BF4F]" />
+                        <div className="w-2 h-2 rounded-full bg-[#61C554]" />
                       </div>
-                      <span className="text-white font-extrabold text-xs ml-3 tracking-wide flex items-center gap-1.5">
+                      <span className="text-white font-extrabold text-xs ml-2 tracking-wide flex items-center gap-1">
                         <MessageSquare className="w-3.5 h-3.5 text-purple-200" /> #csm-intelligence-briefings
                       </span>
                     </div>
@@ -2561,94 +2538,92 @@ export default function Dashboard() {
                     </span>
                   </div>
 
-                  <div className="p-5 flex-1 overflow-y-auto bg-white flex flex-col justify-between">
+                  <div className="p-4 flex-1 overflow-y-auto bg-white flex flex-col justify-between min-h-0">
                     {!Array.isArray(slackPayload) ? (
-                      <div className="h-full flex flex-col items-center justify-center text-slate-400 gap-4 py-20">
-                        <div className="bg-indigo-50 p-4 rounded-full border border-indigo-100 shadow-md">
-                          <AlertTriangle className="w-8 h-8 text-indigo-600 animate-bounce" />
+                      <div className="h-full flex flex-col items-center justify-center text-slate-400 gap-3 py-10">
+                        <div className="bg-indigo-50 p-3 rounded-full border border-indigo-100 shadow-md">
+                          <AlertTriangle className="w-7 h-7 text-indigo-600 animate-bounce" />
                         </div>
                         <div className="text-center">
                           <p className="text-slate-800 text-sm font-extrabold">Awaiting Automation Trigger</p>
-                          <p className="text-slate-500 text-xs mt-1">Click &quot;Sync Engine&quot; to push telemetry to Slack.</p>
+                          <p className="text-slate-500 text-xs mt-0.5">Click &quot;Sync Engine&quot; to push telemetry to Slack.</p>
                         </div>
                       </div>
                     ) : (
-                      <div className="flex gap-3">
-                        {/* Avatar */}
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex-shrink-0 flex items-center justify-center text-white font-black text-xs shadow-md border border-indigo-200">
+                      <div className="flex gap-3 h-full min-h-0">
+                        <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-indigo-600 to-purple-600 flex-shrink-0 flex items-center justify-center text-white font-black text-xs shadow-md border border-indigo-200">
                           HG
                         </div>
                         
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-baseline gap-2 mb-1">
-                            <span className="font-extrabold text-slate-900 text-sm hover:underline cursor-pointer">HG Success Bot</span>
-                            <span className="bg-indigo-100 border border-indigo-200 text-indigo-700 text-[8px] px-1.5 py-0.2 rounded font-extrabold tracking-widest uppercase">APP</span>
-                            <span className="text-[10px] text-slate-500 font-medium">Just now</span>
-                          </div>
-                          
-                          {/* Slack block parser */}
-                          <div className="space-y-4 mt-3">
-                            {slackPayload.map((block, index) => {
-                              if (!block) return null;
-                              
-                              if (block.type === "header") {
-                                return (
-                                  <h4 key={index} className="text-sm font-extrabold text-slate-950 tracking-tight border-b border-slate-100 pb-2">
-                                    {block.text?.text || ""}
-                                  </h4>
-                                );
-                              }
-                              
-                              if (block.type === "divider") {
-                                return <hr key={index} className="border-slate-100 my-2" />;
-                              }
-                              
-                              if (block.type === "section") {
-                                const rawText = block.text?.text || "";
-                                const isCritical = rawText.includes("🔴");
-                                const isElevated = rawText.includes("🟡");
-                                const isStable = rawText.includes("🟢");
+                        <div className="flex-1 min-w-0 flex flex-col justify-between h-full">
+                          <div className="flex-1 overflow-y-auto min-h-0 pr-1">
+                            <div className="flex items-baseline gap-2 mb-1">
+                              <span className="font-extrabold text-slate-900 text-xs hover:underline cursor-pointer">HG Success Bot</span>
+                              <span className="bg-indigo-100 border border-indigo-200 text-indigo-700 text-[8px] px-1.5 py-0.2 rounded font-extrabold tracking-widest uppercase">APP</span>
+                              <span className="text-[10px] text-slate-500 font-medium">Just now</span>
+                            </div>
+                            
+                            <div className="space-y-3 mt-2">
+                              {slackPayload.map((block, index) => {
+                                if (!block) return null;
                                 
-                                // Replace Slack markdown bold with html tags
-                                const formattedText = rawText
-                                  .replace(/\*(.*?)\*/g, "<strong>$1</strong>")
-                                  .replace(/\n/g, "<br />");
-                                
-                                let alertBorderColor = "border-slate-200 bg-slate-50/50";
-                                if (isCritical) {
-                                  alertBorderColor = "border-l-4 border-l-rose-500 border-rose-100 bg-rose-50/30 p-3 rounded-r-xl shadow-sm";
-                                } else if (isElevated) {
-                                  alertBorderColor = "border-l-4 border-l-amber-500 border-amber-100 bg-amber-50/30 p-3 rounded-r-xl shadow-sm";
-                                } else if (isStable) {
-                                  alertBorderColor = "border-l-4 border-l-emerald-500 border-emerald-100 bg-emerald-50/30 p-3 rounded-r-xl shadow-sm";
+                                if (block.type === "header") {
+                                  return (
+                                    <h4 key={index} className="text-xs font-extrabold text-slate-900 tracking-tight border-b border-slate-100 pb-1.5">
+                                      {block.text?.text || ""}
+                                    </h4>
+                                  );
                                 }
                                 
-                                return (
-                                  <div key={index} className={`text-xs leading-relaxed text-slate-800 ${alertBorderColor}`}>
-                                    <div dangerouslySetInnerHTML={{ __html: formattedText }} />
-                                  </div>
-                                );
-                              }
-                              return null;
-                            })}
+                                if (block.type === "divider") {
+                                  return <hr key={index} className="border-slate-100 my-1.5" />;
+                                }
+                                
+                                if (block.type === "section") {
+                                  const rawText = block.text?.text || "";
+                                  const isCritical = rawText.includes("🔴");
+                                  const isElevated = rawText.includes("🟡");
+                                  const isStable = rawText.includes("🟢");
+                                  
+                                  const formattedText = rawText
+                                    .replace(/\*(.*?)\*/g, "<strong>$1</strong>")
+                                    .replace(/\n/g, "<br />");
+                                  
+                                  let alertBorderColor = "border-slate-200 bg-slate-50/50";
+                                  if (isCritical) {
+                                    alertBorderColor = "border-l-4 border-l-rose-500 border-rose-100 bg-rose-50/30 p-2.5 rounded-r-xl shadow-sm";
+                                  } else if (isElevated) {
+                                    alertBorderColor = "border-l-4 border-l-amber-500 border-amber-100 bg-amber-50/30 p-2.5 rounded-r-xl shadow-sm";
+                                  } else if (isStable) {
+                                    alertBorderColor = "border-l-4 border-l-emerald-500 border-emerald-100 bg-emerald-50/30 p-2.5 rounded-r-xl shadow-sm";
+                                  }
+                                  
+                                  return (
+                                    <div key={index} className={`text-[11px] leading-relaxed text-slate-800 ${alertBorderColor}`}>
+                                      <div dangerouslySetInnerHTML={{ __html: formattedText }} />
+                                    </div>
+                                  );
+                                }
+                                return null;
+                              })}
+                            </div>
                           </div>
 
-                          {/* Interactive Slack simulator buttons */}
-                          <div className="flex gap-2.5 mt-4 pt-3 border-t border-slate-100">
+                          <div className="flex gap-2 mt-2 pt-2 border-t border-slate-100 flex-shrink-0">
                             <button 
                               onClick={() => handleSlackActionButtonClick("Alert AE")}
-                              className="text-[10px] font-extrabold px-3 py-1.5 border border-slate-300 hover:border-slate-400 text-slate-700 bg-slate-50 hover:bg-slate-100 rounded-lg transition-all"
+                              className="text-[9px] font-extrabold px-2.5 py-1.5 border border-slate-300 hover:border-slate-400 text-slate-700 bg-slate-50 hover:bg-slate-100 rounded-lg transition-all cursor-pointer"
                             >
                               🔔 Notify AE
                             </button>
                             <button 
                               onClick={() => handleSlackActionButtonClick("Approve Ops Draft")}
-                              className="text-[10px] font-extrabold px-3 py-1.5 border border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-all"
+                              className="text-[9px] font-extrabold px-2.5 py-1.5 border border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-all cursor-pointer"
                             >
                               ✅ Acknowledge Alert
                             </button>
                             {slackReaction && (
-                              <span className="inline-flex items-center justify-center bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full text-xs font-bold animate-bounce">
+                              <span className="inline-flex items-center justify-center bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full text-[10px] font-bold">
                                 {slackReaction} 1
                               </span>
                             )}
@@ -2661,23 +2636,22 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* RAW JSON MODE */}
               {viewMode === "json" && (
-                <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-inner flex flex-col h-full min-h-[380px]">
-                  <div className="bg-slate-950 px-4 py-2 border-b border-slate-800 flex justify-between items-center">
+                <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-inner flex flex-col h-full min-h-0">
+                  <div className="bg-slate-950 px-4 py-2 border-b border-slate-800 flex justify-between items-center flex-shrink-0">
                     <span className="text-[10px] font-mono text-slate-400">slack_block_kit.json</span>
                     {slackPayload && (
                       <button 
                         onClick={copyToClipboard}
-                        className="text-[10px] font-bold text-indigo-300 hover:text-white flex items-center gap-1.5 transition-colors"
+                        className="text-[10px] font-bold text-indigo-300 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
                       >
                         {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                         {copied ? "Copied!" : "Copy JSON"}
                       </button>
                     )}
                   </div>
-                  <div className="p-4 overflow-x-auto flex-1" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-                    <pre className="text-emerald-400 text-[11px] leading-relaxed">
+                  <div className="p-4 overflow-auto flex-1 min-h-0" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                    <pre className="text-emerald-400 text-[10.5px] leading-relaxed">
                       {slackPayload ? JSON.stringify(slackPayload, null, 2) : "// Awaiting automated data hydration. Execute sync."}
                     </pre>
                   </div>
@@ -2685,14 +2659,13 @@ export default function Dashboard() {
               )}
             </div>
 
-            {/* Terminal Trace Logger */}
-            <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex flex-col h-[200px] overflow-hidden">
-              <div className="flex justify-between items-center mb-2.5">
+            <div className="px-5 py-3 border-t border-slate-200 bg-slate-50 flex flex-col h-[190px] flex-shrink-0 overflow-hidden">
+              <div className="flex justify-between items-center mb-1.5 flex-shrink-0">
                 <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
                   <Terminal className="w-3.5 h-3.5 text-indigo-600" /> LangGraph Orchestrator Trace
                 </label>
                 <div className="flex items-center gap-1.5">
-                  <span className={`w-2 h-2 rounded-full ${loading ? 'bg-indigo-500 animate-ping' : 'bg-slate-300'}`} />
+                  <span className={`w-1.5 h-1.5 rounded-full ${loading ? 'bg-indigo-500 animate-ping' : 'bg-slate-300'}`} />
                   <span className="text-[8px] font-extrabold text-slate-500 uppercase tracking-wider">
                     {loading ? 'Pipeline Running' : 'Idle Gateway'}
                   </span>
@@ -2700,16 +2673,16 @@ export default function Dashboard() {
               </div>
               
               <div 
-                className="bg-slate-950 rounded-2xl p-4 flex-1 overflow-y-auto border border-slate-850 shadow-inner"
+                className="bg-slate-950 rounded-2xl p-3 flex-1 overflow-y-auto border border-slate-800 shadow-inner min-h-0"
                 style={{ fontFamily: "'JetBrains Mono', monospace" }}
               >
                 {logs.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-full text-slate-500 text-[10px] gap-1">
-                    <Code className="w-4 h-4 opacity-50" />
+                  <div className="flex flex-col items-center justify-center h-full text-slate-500 text-[9px] gap-0.5">
+                    <Code className="w-3.5 h-3.5 opacity-50" />
                     <span>Run the Sync Engine to track trace nodes</span>
                   </div>
                 ) : (
-                  <div className="space-y-1.5">
+                  <div className="space-y-1">
                     {logs.map((log, i) => {
                       let colorClass = "text-slate-300";
                       if (log.includes("❌")) colorClass = "text-rose-400 font-bold";
@@ -2717,7 +2690,7 @@ export default function Dashboard() {
                       else if (log.includes("🧠")) colorClass = "text-indigo-400";
                       else if (log.includes("⚡")) colorClass = "text-blue-400";
                       return (
-                        <p key={i} className={`text-[10.5px] leading-relaxed tracking-wide ${colorClass}`}>
+                        <p key={i} className={`text-[10px] leading-relaxed tracking-wide ${colorClass}`}>
                           {log}
                         </p>
                       );
@@ -2732,8 +2705,7 @@ export default function Dashboard() {
         </div>
       </main>
 
-      {/* FOOTER */}
-      <footer className="border-t border-slate-200 bg-white px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-slate-500 z-10">
+      <footer className="border-t border-slate-200 bg-white px-8 py-2.5 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-slate-500 z-10 flex-shrink-0">
         <p className="flex items-center gap-1.5">
           <ShieldCheck className="w-4 h-4 text-emerald-600" /> System compliant with Vitally and Salesforce schemas.
         </p>
@@ -2742,11 +2714,9 @@ export default function Dashboard() {
         </p>
       </footer>
 
-      {/* MOCK EMAIL DRAWER / MODAL FOR DRAFT ESCALATION */}
       {emailDrawerAccount && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl w-full max-w-2xl overflow-hidden animate-slide-in">
-            {/* Modal Header */}
             <div className="bg-gradient-to-r from-indigo-700 to-indigo-900 text-white px-6 py-4 flex justify-between items-center">
               <div className="flex items-center gap-2">
                 <Mail className="w-5 h-5" />
@@ -2760,7 +2730,6 @@ export default function Dashboard() {
               </button>
             </div>
 
-            {/* Modal Content */}
             <div className="p-6 space-y-4">
               <div className="grid grid-cols-1 gap-2 text-xs">
                 <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
@@ -2793,8 +2762,7 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Modal Footer */}
-            <div className="bg-slate-50 px-6 py-4 border-t border-slate-150 flex justify-end gap-3">
+            <div className="bg-slate-50 px-6 py-4 border-t border-slate-100 flex justify-end gap-3">
               <button 
                 onClick={() => setEmailDrawerAccount(null)}
                 className="text-xs font-bold text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 py-2.5 px-4 rounded-xl transition-all cursor-pointer"
