@@ -13,7 +13,7 @@ export default function Dashboard() {
     setLoading(true);
     setStatus("EXECUTING ORCHESTRATION...");
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/trigger-digest", {
+      const response = await axios.post("https://gtm-automation-backend.onrender.com/api/trigger-digest", {
         csmId: "CSM_MARK_R",
       });
       setSlackPayload(response.data.slackBlockKitPayload);
