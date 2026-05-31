@@ -2753,7 +2753,7 @@ Enterprise Customer Success Team`;
       </div>
     ) : (
       <div 
-        className="h-screen w-full bg-gradient-to-br from-indigo-50/60 via-slate-50 to-purple-50/50 text-slate-800 flex flex-col font-sans relative overflow-hidden"
+        className="min-h-screen w-full bg-gradient-to-br from-indigo-50/60 via-slate-50 to-purple-50/50 text-slate-800 flex flex-col font-sans relative overflow-x-hidden"
         style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
       >
         <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-200/40 blur-3xl pointer-events-none z-0" />
@@ -2899,7 +2899,7 @@ Enterprise Customer Success Team`;
         </div>
       </section>
 
-      <main className="flex-1 min-h-0 overflow-y-auto lg:overflow-hidden px-4 lg:px-8 pb-4 flex flex-col lg:flex-row gap-4 lg:gap-6 z-10 relative">
+      <main className="px-4 lg:px-8 pb-8 flex flex-col lg:flex-row gap-4 lg:gap-6 z-10 relative">
         
         <div className="w-full lg:w-1/3 lg:flex-shrink-0 flex flex-col lg:min-h-0">
           <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col min-h-[420px] lg:flex-1 lg:min-h-0 overflow-hidden">
