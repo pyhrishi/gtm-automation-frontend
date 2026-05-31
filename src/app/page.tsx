@@ -1982,6 +1982,7 @@ const PORTFOLIOS: Record<string, {
 export default function Dashboard() {
   const [appViewMode, setAppViewMode] = useState<"assignment" | "console">("assignment");
   const [assignmentTab, setAssignmentTab] = useState<"design" | "onboarding" | "past">("design");
+  const [showDesignDocModal, setShowDesignDocModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [slackPayload, setSlackPayload] = useState<any[] | null>(null);
   const [selectedCsm, setSelectedCsm] = useState("CSM_MARK_R");
@@ -2153,6 +2154,15 @@ export default function Dashboard() {
           <p className="text-xs text-slate-400 mt-1">
             End-to-end telemetry pipeline querying Vitally, Salesforce CPQ, and Weflow to push active briefings directly into Slack.
           </p>
+
+          <div className="flex gap-3 mt-3">
+            <button
+              onClick={() => setShowDesignDocModal(true)}
+              className="flex items-center gap-1.5 bg-indigo-500/10 border border-indigo-500/20 text-indigo-405 hover:bg-indigo-500/20 hover:border-indigo-300 text-xs font-bold px-4 py-2 rounded-xl transition-all cursor-pointer shadow-sm active:scale-95 flex-shrink-0"
+            >
+              <Terminal className="w-3.5 h-3.5 text-indigo-400" /> View Detailed Developer Design Doc (.md)
+            </button>
+          </div>
 
           <div className="mt-4 bg-slate-900/40 border border-slate-850 p-4 rounded-2xl flex flex-col items-center gap-3">
             <div className="w-full flex justify-between items-center">
@@ -2521,7 +2531,7 @@ export default function Dashboard() {
 
         <main className="max-w-5xl w-full mx-auto px-6 lg:px-8 mt-8 flex-1 z-10 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-slate-900/40 backdrop-blur-md border border-slate-850 p-5 rounded-2xl flex items-center justify-between hover:border-slate-800 transition-all">
+            <div className="group relative bg-slate-900/40 backdrop-blur-md border border-slate-850 p-5 rounded-2xl flex items-center justify-between hover:border-slate-800 transition-all cursor-help">
               <div>
                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Trigger Mechanism</p>
                 <h3 className="text-sm font-bold text-white tracking-tight">Mon 7:00 AM EventBridge</h3>
@@ -2530,9 +2540,13 @@ export default function Dashboard() {
               <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 text-indigo-400">
                 <Clock className="w-5 h-5" />
               </div>
+              <div className="absolute bottom-[102%] left-1/2 -translate-x-1/2 mb-2 w-64 scale-0 group-hover:scale-100 transition-all duration-200 bg-slate-900 border border-slate-800 text-[10px] text-slate-405 p-3 rounded-xl shadow-xl pointer-events-none z-50 leading-relaxed font-sans font-normal text-left">
+                <span className="font-bold text-white block mb-1">⏰ Production Trigger Logic</span>
+                AWS EventBridge schedules pipeline run at 7 AM. The 2-hour buffer covers Salesforce/Vitally API rate limiting, cold start times, and automates retry fallback paths.
+              </div>
             </div>
 
-            <div className="bg-slate-900/40 backdrop-blur-md border border-slate-850 p-5 rounded-2xl flex items-center justify-between hover:border-slate-800 transition-all">
+            <div className="group relative bg-slate-900/40 backdrop-blur-md border border-slate-850 p-5 rounded-2xl flex items-center justify-between hover:border-slate-800 transition-all cursor-help">
               <div>
                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Data Ingestion sources</p>
                 <h3 className="text-sm font-bold text-white tracking-tight">Vitally, Salesforce, Weflow</h3>
@@ -2541,9 +2555,13 @@ export default function Dashboard() {
               <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 text-emerald-400">
                 <Users className="w-5 h-5" />
               </div>
+              <div className="absolute bottom-[102%] left-1/2 -translate-x-1/2 mb-2 w-64 scale-0 group-hover:scale-100 transition-all duration-200 bg-slate-900 border border-slate-800 text-[10px] text-slate-405 p-3 rounded-xl shadow-xl pointer-events-none z-50 leading-relaxed font-sans font-normal text-left">
+                <span className="font-bold text-white block mb-1">🔌 Relational Aggregation</span>
+                Performs relational data joins on accountId. Ingests usage records from Vitally, contracts and deal cycles from Salesforce, and weekly conversation transcripts from Weflow.
+              </div>
             </div>
 
-            <div className="bg-slate-900/40 backdrop-blur-md border border-slate-850 p-5 rounded-2xl flex items-center justify-between hover:border-slate-800 transition-all">
+            <div className="group relative bg-slate-905 bg-slate-900/40 backdrop-blur-md border border-slate-850 p-5 rounded-2xl flex items-center justify-between hover:border-slate-800 transition-all cursor-help">
               <div>
                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Delivery Channel</p>
                 <h3 className="text-sm font-bold text-white tracking-tight">Slack Block Kit DM</h3>
@@ -2551,6 +2569,10 @@ export default function Dashboard() {
               </div>
               <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 text-purple-400">
                 <MessageSquare className="w-5 h-5" />
+              </div>
+              <div className="absolute bottom-[102%] left-1/2 -translate-x-1/2 mb-2 w-64 scale-0 group-hover:scale-100 transition-all duration-200 bg-slate-900 border border-slate-800 text-[10px] text-slate-405 p-3 rounded-xl shadow-xl pointer-events-none z-50 leading-relaxed font-sans font-normal text-left">
+                <span className="font-bold text-white block mb-1">📬 Active Slack DM Delivery</span>
+                Pushes Block Kit formatted briefs directly to CSM Slack DMs at 8:45 AM. Supported by interactive actions that post back to update CRM state.
               </div>
             </div>
           </div>
@@ -2597,6 +2619,53 @@ export default function Dashboard() {
             {assignmentTab === "past" && renderPastWork()}
           </div>
         </main>
+
+        {showDesignDocModal && (
+          <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+            <div className="bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl w-full max-w-4xl max-h-[85vh] overflow-hidden flex flex-col animate-slide-in">
+              <div className="bg-gradient-to-r from-indigo-950 to-slate-900 text-white px-6 py-4 flex justify-between items-center border-b border-slate-850">
+                <div className="flex items-center gap-2">
+                  <Terminal className="w-5 h-5 text-indigo-400" />
+                  <div>
+                    <h4 className="font-extrabold text-sm uppercase tracking-wider">NOTION_DESIGN_DOC.md</h4>
+                    <p className="text-[10px] text-slate-500 font-mono">Detailed Developer Technical Document</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <button 
+                    onClick={() => {
+                      navigator.clipboard.writeText(NOTION_DESIGN_DOC_MD);
+                      showToast("Raw markdown copied to clipboard!");
+                    }}
+                    className="text-[10px] font-bold text-indigo-405 hover:text-indigo-300 bg-indigo-500/10 border border-indigo-500/20 py-2 px-3.5 rounded-lg flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+                  >
+                    <Copy className="w-3 h-3" /> Copy Raw Markdown
+                  </button>
+                  <button 
+                    onClick={() => setShowDesignDocModal(false)}
+                    className="text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-6 overflow-y-auto flex-1 space-y-4 max-h-[70vh] bg-slate-950/20 font-sans">
+                {parseMarkdown(NOTION_DESIGN_DOC_MD)}
+              </div>
+
+              <div className="bg-slate-950/80 px-6 py-4 border-t border-slate-850 flex justify-end gap-3">
+                <button 
+                  onClick={() => setShowDesignDocModal(false)}
+                  className="text-xs font-bold text-slate-350 bg-slate-850 hover:bg-slate-805 border border-slate-700 py-2.5 px-5 rounded-xl transition-all cursor-pointer"
+                >
+                  Close Document
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     ) : (
       <div 
@@ -2668,7 +2737,7 @@ export default function Dashboard() {
       </header>
 
       <section className="px-4 lg:px-8 pt-3 pb-2 grid grid-cols-2 lg:grid-cols-4 gap-3 z-10 flex-shrink-0">
-        <div className="bg-white/90 backdrop-blur-md border border-indigo-100/50 p-3 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-indigo-500/5 hover:-translate-y-0.5 hover:border-indigo-200/80 transition-all duration-300 group min-h-0">
+        <div className="group relative bg-white/90 backdrop-blur-md border border-indigo-100/50 p-3 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-indigo-500/5 hover:-translate-y-0.5 hover:border-indigo-200/80 transition-all duration-300 min-h-0 cursor-help">
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Portfolio Size</p>
             <h3 className="text-xl font-extrabold text-slate-950 tracking-tight">{totalAccounts} Clients</h3>
@@ -2679,9 +2748,13 @@ export default function Dashboard() {
           <div className="bg-indigo-50 p-3 rounded-xl text-indigo-600 border border-indigo-100 group-hover:scale-105 transition-transform">
             <Layout className="w-5 h-5" />
           </div>
+          <div className="absolute top-[102%] left-1/2 -translate-x-1/2 mt-1 w-56 scale-0 group-hover:scale-100 transition-all duration-200 bg-slate-900 border border-slate-800 text-[10px] text-slate-300 p-2.5 rounded-xl shadow-lg pointer-events-none z-50 leading-relaxed font-sans font-normal text-left">
+            <span className="font-bold text-white block mb-0.5">📂 Portfolio Size</span>
+            Total number of customer accounts assigned to this CSM.
+          </div>
         </div>
 
-        <div className="bg-white/90 backdrop-blur-md border border-emerald-100/50 p-3 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-emerald-500/5 hover:-translate-y-0.5 hover:border-emerald-200/80 transition-all duration-300 group min-h-0">
+        <div className="group relative bg-white/90 backdrop-blur-md border border-emerald-100/50 p-3 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-emerald-500/5 hover:-translate-y-0.5 hover:border-emerald-200/80 transition-all duration-300 min-h-0 cursor-help">
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Managed ARR</p>
             <h3 className="text-xl font-extrabold text-slate-950 tracking-tight">{formatARR(totalArr)}</h3>
@@ -2692,9 +2765,13 @@ export default function Dashboard() {
           <div className="bg-emerald-50 p-3 rounded-xl text-emerald-600 border border-emerald-100 group-hover:scale-105 transition-transform">
             <DollarSign className="w-5 h-5" />
           </div>
+          <div className="absolute top-[102%] left-1/2 -translate-x-1/2 mt-1 w-56 scale-0 group-hover:scale-100 transition-all duration-200 bg-slate-900 border border-slate-800 text-[10px] text-slate-300 p-2.5 rounded-xl shadow-lg pointer-events-none z-50 leading-relaxed font-sans font-normal text-left">
+            <span className="font-bold text-white block mb-0.5">💰 Managed ARR</span>
+            Cumulative Annual Recurring Revenue valuation of active portfolio contracts.
+          </div>
         </div>
 
-        <div className="bg-white/90 backdrop-blur-md border border-blue-100/50 p-3 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-blue-500/5 hover:-translate-y-0.5 hover:border-blue-200/80 transition-all duration-300 group min-h-0">
+        <div className="group relative bg-white/90 backdrop-blur-md border border-blue-100/50 p-3 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-blue-500/5 hover:-translate-y-0.5 hover:border-blue-200/80 transition-all duration-300 min-h-0 cursor-help">
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Avg Health Score</p>
             <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">{avgHealth} / 10</h3>
@@ -2709,9 +2786,13 @@ export default function Dashboard() {
           <div className="bg-blue-50 p-3 rounded-xl text-blue-600 border border-blue-100 group-hover:scale-105 transition-transform">
             <Heart className="w-5 h-5 fill-blue-500" />
           </div>
+          <div className="absolute top-[102%] left-1/2 -translate-x-1/2 mt-1 w-56 scale-0 group-hover:scale-100 transition-all duration-200 bg-slate-900 border border-slate-800 text-[10px] text-slate-300 p-2.5 rounded-xl shadow-lg pointer-events-none z-50 leading-relaxed font-sans font-normal text-left">
+            <span className="font-bold text-white block mb-0.5">❤️ Avg Health Score</span>
+            Arithmetic mean of Vitally usage health scores across this portfolio.
+          </div>
         </div>
 
-        <div className="bg-white/95 backdrop-blur-md border border-rose-100 p-3 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-rose-500/5 hover:-translate-y-0.5 hover:border-rose-200 transition-all duration-300 relative overflow-hidden group min-h-0">
+        <div className="group relative bg-white/95 backdrop-blur-md border border-rose-100 p-3 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-rose-500/5 hover:-translate-y-0.5 hover:border-rose-200 transition-all duration-300 relative overflow-hidden min-h-0 cursor-help">
           {criticalCount > 0 && (
             <div className="bg-gradient-to-b from-rose-500 to-pink-600 w-1 absolute left-0 top-0 h-full animate-pulse" />
           )}
@@ -2726,6 +2807,10 @@ export default function Dashboard() {
           </div>
           <div className={`p-3 rounded-xl border group-hover:scale-105 transition-transform ${criticalCount > 0 ? 'bg-rose-50 text-rose-600 border-rose-100 animate-pulse' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
             {criticalCount > 0 ? <ShieldAlert className="w-5 h-5" /> : <ShieldCheck className="w-5 h-5" />}
+          </div>
+          <div className="absolute top-[102%] left-1/2 -translate-x-1/2 mt-1 w-56 scale-0 group-hover:scale-100 transition-all duration-200 bg-slate-900 border border-slate-800 text-[10px] text-slate-300 p-2.5 rounded-xl shadow-lg pointer-events-none z-50 leading-relaxed font-sans font-normal text-left">
+            <span className="font-bold text-white block mb-0.5">⚠️ Risk ARR Pool</span>
+            Total contract ARR currently tied to accounts flagged as CRITICAL risk.
           </div>
         </div>
       </section>
@@ -3250,3 +3335,315 @@ export default function Dashboard() {
     )
   );
 }
+
+const parseMarkdown = (text: string) => {
+  const lines = text.split("\n");
+  let inCodeBlock = false;
+  let codeContent: string[] = [];
+  
+  return lines.map((line, idx) => {
+    if (line.startsWith("```")) {
+      if (inCodeBlock) {
+        inCodeBlock = false;
+        const rawCode = codeContent.join("\n");
+        codeContent = [];
+        return (
+          <pre key={idx} className="bg-slate-950/90 border border-slate-800 p-4 rounded-xl text-[10px] font-mono text-emerald-450 overflow-x-auto leading-relaxed my-3">
+            {rawCode}
+          </pre>
+        );
+      } else {
+        inCodeBlock = true;
+        return null;
+      }
+    }
+    
+    if (inCodeBlock) {
+      codeContent.push(line);
+      return null;
+    }
+    
+    if (line.startsWith("# ")) {
+      return <h1 key={idx} className="text-xl lg:text-2xl font-black text-white mt-6 mb-3 border-b border-slate-800 pb-2">{line.replace("# ", "")}</h1>;
+    }
+    if (line.startsWith("## ")) {
+      return <h2 key={idx} className="text-base lg:text-lg font-black text-indigo-400 mt-5 mb-2.5 flex items-center gap-2">{line.replace("## ", "")}</h2>;
+    }
+    if (line.startsWith("### ")) {
+      return <h3 key={idx} className="text-sm font-extrabold text-white mt-4 mb-2">{line.replace("### ", "")}</h3>;
+    }
+    if (line.startsWith("#### ")) {
+      return <h4 key={idx} className="text-xs font-bold text-slate-300 mt-3 mb-1.5">{line.replace("#### ", "")}</h4>;
+    }
+    if (line.trim().startsWith("* ") || line.trim().startsWith("- ")) {
+      const content = line.trim().substring(2);
+      return <li key={idx} className="ml-5 list-disc text-xs text-slate-400 my-1 leading-relaxed">{content}</li>;
+    }
+    if (line === "---" || line === "***") {
+      return <hr key={idx} className="border-slate-800 my-4" />;
+    }
+    if (line.trim() === "") {
+      return <div key={idx} className="h-2" />;
+    }
+    
+    // Check if it's a table row
+    if (line.startsWith("|")) {
+      // If it is a header divider row e.g. |---|
+      if (line.includes("-")) return null;
+      
+      const cells = line.split("|").map(c => c.trim()).filter(c => c !== "");
+      if (cells.length === 0) return null;
+      return (
+        <div key={idx} className="grid grid-cols-3 gap-2 py-2 px-3 hover:bg-slate-900/20 text-[11px] border-b border-slate-850 text-slate-400">
+          {cells.map((cell, cIdx) => (
+            <span key={cIdx} className={cIdx === 0 ? "font-bold text-white" : ""}>{cell}</span>
+          ))}
+        </div>
+      );
+    }
+    
+    return <p key={idx} className="text-xs text-slate-400 leading-relaxed my-1.5">{line}</p>;
+  });
+};
+
+const NOTION_DESIGN_DOC_MD = `# 📐 Technical Design Document: Enterprise CSM Portfolio Automation Engine
+
+This document details the end-to-end architecture, API integrations, data schemas, LLM synthesis rules, and delivery channels for the automated **Monday 8:45 AM Portfolio Intelligence Briefing**. It is written to be directly actionable for an engineering team to implement.
+
+---
+
+## 🗺️ System Topology & Flow
+
+The automation engine executes a three-phase pipeline: **Ingestion & Relational Joins**, **Reasoning & Synthesis**, and **Interactive Slack Delivery**.
+
+\`\`\`mermaid
+graph TD
+    A[Scheduler: AWS EventBridge] -->|Trigger: Mon 7:00 AM| B[FastAPI Orchestrator Gateway]
+    C[Manual Webhook: Next.js UI Control Panel] -->|Trigger: Ad-hoc POST| B
+    
+    subgraph Phase 1: Multi-Source Ingestion & Relational Join
+        B -->|REST GET /accounts| D[Vitally API Client]
+        B -->|SOQL Query Opportunity/Contract| E[Salesforce REST Client]
+        B -->|REST GET /transcripts| F[Weflow API Client]
+        D -->|healthScore, npsScore| G[InMemory Relational Joiner]
+        E -->|renewal dates, stages, ARR| G
+        F -->|transcript text, logs| G
+    end
+
+    subgraph Phase 2: LangGraph Orchestration & LLM Synthesis
+        G -->|Joined JSON Array| H[LangGraph State Workflow]
+        H -->|Node 1: DataAggregator| I[Sanitized State Object]
+        I -->|Node 2: ChatOpenAI GPT-4o-mini| J[Structured Extraction Engine]
+        J -->|JSON Schema Constraints| K[Pydantic Validation Node]
+    end
+
+    subgraph Phase 3: Delivery & Interactive Feedback Loops
+        K -->|Validated JSON Collection| L[Node 3: SlackFormatter]
+        L -->|Slack Block Kit Payload| M[Slack Webhook Client]
+        M -->|Private Direct Message| N[CSM Slack Channel @ 8:45 AM]
+        N -->|Interactive Button Clicks| O[Slack Actions Endpoint /api/slack/actions]
+        O -->|Writebacks| E
+    end
+\`\`\`
+
+---
+
+## 🕰️ 1. Trigger Mechanics & Orchestration
+
+To guarantee delivery prior to the Monday 9:00 AM team standup, the orchestrator implements a dual-trigger mechanism:
+
+### Chronological Trigger (Production)
+* **Technology:** AWS EventBridge Scheduler (or a Serverless Cron Trigger).
+* **Execution Time:** **Every Monday at 7:00 AM UTC/Local.**
+* **The 2-Hour Failsafe Buffer Rationale:** 
+  1. **API Rate Limiting:** Ingesting data for 100+ accounts across Salesforce, Vitally, and Weflow can trigger rate-limiting controls. The 2-hour window allows for automatic exponential backoff retries.
+  2. **Cold Starts & Sleep Cycles:** Ensures serverless compute layers wake up and authenticate cleanly.
+  3. **Fallback Synthesis:** If the primary LLM provider (OpenAI) experiences downtime or transient API timeouts, the scheduler has enough time to execute up to 3 retries or fallback to a deterministic rules-based scoring engine.
+
+### On-Demand Trigger (Operational)
+* **Technology:** HTTP POST webhook endpoint exposed via \`/api/trigger-digest\`.
+* **Execution Context:** Exposed directly in the Next.js control panel to allow CSMs to run manual mid-week refreshes immediately prior to client reviews, executive escalations, or custom account syncs.
+
+---
+
+## 🔌 2. Data Source Ingestion & Relational Join Schema
+
+The engine executes asynchronous HTTP calls to query and merge account metrics. The unified primary key for join resolution is the \`accountId\`.
+
+\`\`\`
+           [Vitally REST API]             [Salesforce CPQ SOQL]
+             (accountId)                       (accountId)
+                  \\                                 /
+                   \\                               /
+                [Unified Join Node] === (accountId) === [Weflow Logs]
+\`\`\`
+
+### 1. Vitally (Product Health Database)
+* **Ingestion Method:** REST API Client \`GET /v1/accounts?csmId={csm_id}\`.
+* **Fields Extracted:**
+  * \`accountId\` *(string)*: Primary Key (e.g. \`ACC_001\` - used for relational joins).
+  * \`companyName\` *(string)*: Human-readable client identity.
+  * \`healthScore\` *(float)*: Range \`0.0\` - \`10.0\`. Represents real-time product usage trends.
+  * \`npsScore\` *(integer)*: Range \`-100\` to \`100\`. Represents qualitative user feedback.
+
+### 2. Salesforce CPQ (Commercial Opportunity & Timeline)
+* **Ingestion Method:** Salesforce REST API executing SOQL against CPQ objects:
+  \`\`\`sql
+  SELECT ContractEndDate, RenewalOpportunityStage, arrValue, ContractId 
+  FROM Account_Contract_Join 
+  WHERE AccountId = :accountId
+  \`\`\`
+* **Fields Extracted:**
+  * \`contractEndDate\` *(date, YYYY-MM-DD)*: Contract expiration date.
+  * \`renewalOpportunityStage\` *(string)*: Renewal status (e.g., \`Discovery\`, \`Negotiation\`, \`Closed Won\`, \`Reviewing Competitor\`).
+  * \`arrValue\` *(decimal)*: Contract valuation ARR.
+
+### 3. Weflow (Conversational Intelligence & Logs)
+* **Ingestion Method:** REST API call to fetch recorded customer interactions logged within the prior 7 days.
+* **Fields Extracted:**
+  * \`transcriptSummary\` *(string)*: Conversational summary highlighting product issues, customer complaints, or renewals.
+  * \`escalationFlag\` *(boolean)*: True if customer explicitly requested support escalation or contract review.
+  * \`lastInteractionDate\` *(date, YYYY-MM-DD)*.
+
+---
+
+## 🧠 3. The LLM Synthesis Engine (LangGraph)
+
+### LLM Input Context
+The LLM receives a structured JSON payload combining the unified telemetry metrics. Example input payload:
+\`\`\`json
+{
+  "csmId": "CSM_MARK_R",
+  "accounts": [
+    {
+      "accountId": "ACC_001",
+      "companyName": "Acme Corp",
+      "vitally": { "healthScore": 3.8, "npsScore": 4 },
+      "salesforce": { "renewalOpportunityStage": "Reviewing Competitor", "contractEndDate": "2026-06-25", "arrValue": 185000 },
+      "weflow": { "transcriptSummary": "Exec sync. Champion left. New leadership reviewing spending. Severe platform churn risk.", "escalationFlag": true }
+    }
+  ]
+}
+\`\`\`
+
+### The Reasoning Workflow (Prompt Strategy)
+The orchestrator triggers a ChatOpenAI agent running \`gpt-4o-mini\` with a structured reasoning system prompt. It is trained to perform **Compound Risk Analysis**: a low Vitally health score is a hazard, but a low health score *combined* with a renewal date within 30 days and a champion departure log in Weflow represents a **CRITICAL** risk.
+
+#### System Prompt Template
+\`\`\`
+You are an elite Revenue Operations and Customer Success AI Analyst. 
+Your objective is to analyze a unified JSON payload representing a CSM's account book and generate a clear, highly-actionable intelligence briefing.
+
+CRITICAL EVALUATION MATRIX:
+1. stable: Health score > 7.0, no renewal within 90 days, transcripts positive.
+2. elevated: Health score < 6.0 OR renewal within 60 days OR mild transcript risks.
+3. critical: Health score < 5.0 AND renewal within 45 days OR active competitor discussions OR explicit escalation requests.
+
+Generate an executiveSummary capturing the 'why' behind the risk status and extract concrete actionItems.
+\`\`\`
+
+### Output Validation (Pydantic Model)
+The output from the LLM is programmatically enforced using Pydantic validation:
+
+\`\`\`python
+from pydantic import BaseModel, Field
+from typing import List, Literal
+
+class AccountDigest(BaseModel):
+    accountId: str
+    companyName: str
+    riskLevel: Literal["CRITICAL", "ELEVATED", "STABLE"] = Field(
+        description="The compound risk categorization based on health score, renew date, and transcripts."
+    )
+    commercialUrgency: str = Field(
+        description="Summary of renewal date and contract stage."
+    )
+    executiveSummary: str = Field(
+        description="Brief professional summary (max 3 sentences) explaining the classification."
+    )
+    actionItems: List[str] = Field(
+        description="Up to 3 clear, actionable playbooks to mitigate risk or drive engagement."
+    )
+
+class PortfolioDigestCollection(BaseModel):
+    csmId: str
+    digests: List[AccountDigest]
+\`\`\`
+
+---
+
+## 📬 4. Delivery Channel: Interactive Slack DMs
+
+### The Operational Rationale (Why Slack?)
+* **Anti-Context Switching:** CSMs inhabit Slack as their primary operational headquarters. Forcing them to open another tool (like email, Google Drive, or a separate SaaS portal) introduces cognitive friction and slows down Standup preparation.
+* **Timing & Focus:** Pushing the message at **8:45 AM Monday** (exactly 15 minutes before the standup) ensures it is top-of-mind. It takes less than 2 minutes to review their 3 critical risks.
+* **Tactile Interactivity:** Slack Block Kit enables interactive button layouts. A CSM can click "Notify AE" or "Settle Risk" directly within their Slack thread, executing API calls back to Salesforce without navigating away from the chat window.
+
+### Slack Block Kit Payload Example
+The generated JSON is transformed into a Block Kit payload sent to the Slack Webhook API:
+
+\`\`\`json
+{
+  "channel": "U12345678",
+  "blocks": [
+    {
+      "type": "header",
+      "text": {
+        "type": "plain_text",
+        "text": "🚨 Monday Portfolio Intelligence Briefing",
+        "emoji": true
+      }
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "*Acme Corp* is flagged as *CRITICAL CHURN RISK*.\\n*Health:* 3.8/10 | *ARR:* $185,000 | *Renewal:* 2026-06-25"
+      }
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "*Executive Summary:* Champion departure identified. New leadership is actively reviewing alternative platforms. Churn risk is high."
+      }
+    },
+    {
+      "type": "actions",
+      "elements": [
+        {
+          "type": "button",
+          "text": {
+            "type": "plain_text",
+            "text": "💬 Ping Account Executive"
+          },
+          "style": "primary",
+          "value": "action_ping_ae_ACC_001",
+          "action_id": "ping_ae"
+        },
+        {
+          "type": "button",
+          "text": {
+            "type": "plain_text",
+            "text": "📁 Create Escalation Task"
+          },
+          "value": "action_create_escalation_ACC_001",
+          "action_id": "create_escalation"
+        }
+      ]
+    }
+  ]
+}
+\`\`\`
+
+---
+
+## 🛡️ Edge Cases & System Resiliency
+
+1. **LLM Provider Outages (HTTP 500 / Timeout):**
+   * **Mitigation:** The LangGraph state machine catches API exceptions. If the OpenAI API fails, the workflow redirects to a deterministic rule-based analysis node that classifies risk levels purely via threshold comparisons (e.g. \`healthScore < 5.0\` => \`CRITICAL\`) and populates templates for the summary.
+2. **Schema Validation Exceptions:**
+   * **Mitigation:** If the LLM returns an invalid JSON model that fails the Pydantic validator, the system executes an automated retry with a correction prompt. If the second attempt fails, it outputs the fallback deterministic payload to ensure the CSM receives their briefing.
+3. **API Rate Limiting (Salesforce/Vitally):**
+   * **Mitigation:** API clients are built using standard HTTP clients wrapped with a \`tenacity\` retry loop utilizing exponential backoff (\`wait_exponential(multiplier=1, min=4, max=10)\`).
+`;
