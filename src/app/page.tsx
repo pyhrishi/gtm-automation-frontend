@@ -7,7 +7,7 @@ import {
   Code, Layout, User, CheckCircle2, ChevronRight, Zap, RefreshCw,
   TrendingUp, AlertOctagon, ShieldAlert, CheckSquare, DollarSign, Calendar, Heart,
   ArrowRight, Copy, Check, Info, Mail, Send, Award, Clock, Users, Building,
-  ShieldCheck, Sparkles, X, Plus
+  ShieldCheck, Sparkles, X, Plus, BookOpen
 } from "lucide-react";
 
 // Portfolio database corresponding exactly to backend/generate_mock_data.py
@@ -1980,6 +1980,8 @@ const PORTFOLIOS: Record<string, {
 };
 
 export default function Dashboard() {
+  const [appViewMode, setAppViewMode] = useState<"assignment" | "console">("assignment");
+  const [assignmentTab, setAssignmentTab] = useState<"design" | "onboarding" | "past">("design");
   const [loading, setLoading] = useState(false);
   const [slackPayload, setSlackPayload] = useState<any[] | null>(null);
   const [selectedCsm, setSelectedCsm] = useState("CSM_MARK_R");
@@ -2140,54 +2142,499 @@ export default function Dashboard() {
     return `$${val}`;
   };
 
-  return (
-    <div 
-      className="min-h-screen lg:h-screen bg-gradient-to-br from-indigo-50/60 via-slate-50 to-purple-50/50 text-slate-800 flex flex-col font-sans relative lg:overflow-hidden"
-      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-    >
-      <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-200/40 blur-3xl pointer-events-none z-0" />
-      <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-purple-200/40 blur-3xl pointer-events-none z-0" />
-
-      {toastMessage && (
-        <div className="fixed top-6 right-6 bg-slate-900 text-white text-xs font-bold px-5 py-3.5 rounded-2xl shadow-xl z-50 flex items-center gap-2 border border-slate-700 animate-slide-in">
-          <Sparkles className="w-4 h-4 text-yellow-400 animate-pulse" />
-          <span>{toastMessage}</span>
-        </div>
-      )}
-
-      <header className="border-b border-indigo-100/60 bg-white/70 backdrop-blur-md px-4 lg:px-8 py-3 flex flex-row justify-between items-center gap-3 shadow-sm z-10 sticky top-0 flex-shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="bg-gradient-to-tr from-indigo-600 to-violet-600 p-2.5 rounded-2xl shadow-lg shadow-indigo-500/20">
-            <Activity className="text-white w-6 h-6 animate-pulse" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-lg lg:text-2xl font-extrabold text-slate-900 tracking-tight bg-gradient-to-r from-indigo-900 to-slate-900 bg-clip-text text-transparent">
-                HG Insights Workspace
-              </h1>
-              <span className="hidden sm:inline bg-indigo-100 border border-indigo-200 text-indigo-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                v2.1 Enterprise
-              </span>
+  const renderDesignDoc = () => {
+    return (
+      <div className="space-y-8 text-slate-350">
+        <div>
+          <h2 className="text-lg font-black text-white tracking-tight flex items-center gap-2">
+            <span className="bg-indigo-500/10 text-indigo-400 p-1.5 rounded-lg text-xs font-mono">PART 1</span>
+            End-to-End Automation & Design Blueprint
+          </h2>
+          <p className="text-xs text-slate-400 mt-1">
+            End-to-end telemetry pipeline querying Vitally, Salesforce CPQ, and Weflow to push active briefings directly into Slack.
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+            <div className="bg-slate-900/40 border border-slate-850 p-5 rounded-2xl">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="bg-indigo-500/10 p-1.5 rounded-lg text-indigo-400">
+                  <Clock className="w-4 h-4" />
+                </div>
+                <h4 className="text-sm font-bold text-white">🕰️ Timing & Orchestrator Trigger</h4>
+              </div>
+              <div className="text-xs text-slate-400 leading-relaxed space-y-2">
+                <span>**Chronological (Production):** Triggered at **7:00 AM every Monday** via AWS EventBridge.</span>
+                <span className="block mt-2 font-semibold text-indigo-400">The 2-Hour Failsafe Buffer:</span>
+                <span className="block mt-1">Standups begin at 9:00 AM. Setting the trigger at 7:00 AM leaves a 2-hour buffer which acts as a crucial operational window to absorb database rate-limiting controls, API key cold starts, and allow automatic LangGraph retries if transient network failures occur.</span>
+                <span className="block mt-2">**On-Demand (Ad-hoc):** Exposed via `/api/trigger-digest` endpoint in the Next.js control panel to let CSMs force-refresh portfolios before key calls.</span>
+              </div>
             </div>
-            <p className="text-xs text-indigo-600 font-bold uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
-              <Zap className="w-3.5 h-3.5 fill-indigo-600 animate-bounce" /> Telemetry & CS Orchestrator
+
+            <div className="bg-slate-900/40 border border-slate-850 p-5 rounded-2xl">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="bg-emerald-500/10 p-1.5 rounded-lg text-emerald-400">
+                  <Users className="w-4 h-4" />
+                </div>
+                <h4 className="text-sm font-bold text-white">🔌 Multi-Source Schema Ingestion</h4>
+              </div>
+              <div className="text-xs text-slate-400 leading-relaxed space-y-2">
+                <span>Data is ingested from three systems and joined inside an in-memory compiler on `accountId`:</span>
+                <div className="space-y-1.5 mt-2">
+                  <div>• **Vitally:** Queries client usage trends (`healthScore`, `npsScore`).</div>
+                  <div>• **Salesforce CPQ:** Executes SOQL to extract contract dates, stages, and contract sizes (`arrValue`, `contractEndDate`, `renewalOpportunityStage`).</div>
+                  <div>• **Weflow:** Gathers qualitative conversation summaries (`transcriptSummary`, `escalationFlag`).</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr className="border-slate-800" />
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <h2 className="text-lg font-black text-white tracking-tight flex items-center gap-2">
+              <span className="bg-purple-500/10 text-purple-400 p-1.5 rounded-lg text-xs font-mono">PART 2</span>
+              🧠 LLM Reasoning Node (LangGraph)
+            </h2>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              LangGraph manages state validation, sending the compiled JSON payload to a ChatOpenAI model (`gpt-4o-mini`).
+            </p>
+            <div className="bg-slate-900/40 border border-slate-850 p-4 rounded-xl space-y-2 text-xs">
+              <span className="font-bold text-slate-350 block">Compound Risk Logic:</span>
+              <p className="text-slate-400 leading-normal">
+                The LLM evaluates cross-system signals. For example, a low Vitally score is flagged, but a low score *combined* with a renewal date within 45 days and an escalation note in Weflow is automatically promoted to **CRITICAL** risk status.
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex justify-between items-center text-xs text-slate-400 font-semibold">
+              <span>Pydantic Response Schema</span>
+              <button 
+                onClick={() => {
+                  navigator.clipboard.writeText(`class AccountDigest(BaseModel):\n    accountId: str\n    companyName: str\n    riskLevel: Literal["CRITICAL", "ELEVATED", "STABLE"]\n    commercialUrgency: str\n    executiveSummary: str\n    actionItems: List[str]`);
+                  showToast("Copied code to clipboard!");
+                }}
+                className="text-[10px] text-indigo-400 hover:text-indigo-300 flex items-center gap-1 cursor-pointer"
+              >
+                <Copy className="w-3 h-3" /> Copy Schema
+              </button>
+            </div>
+            <pre className="bg-slate-950/80 border border-slate-850 p-4 rounded-xl text-[10px] font-mono text-emerald-400 overflow-x-auto leading-relaxed">
+{`class AccountDigest(BaseModel):
+    accountId: str
+    companyName: str
+    riskLevel: Literal["CRITICAL", "ELEVATED", "STABLE"]
+    commercialUrgency: str
+    executiveSummary: str
+    actionItems: List[str]`}
+            </pre>
+          </div>
+        </div>
+
+        <hr className="border-slate-800" />
+
+        <div>
+          <h2 className="text-lg font-black text-white tracking-tight flex items-center gap-2">
+            <span className="bg-blue-500/10 text-blue-400 p-1.5 rounded-lg text-xs font-mono">PART 3</span>
+            📬 Delivery Format & Rationale
+          </h2>
+          <p className="text-xs text-slate-400 mt-1">
+            Digests reach CSMs via private Slack DMs using Slack Block Kit.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+            <div className="space-y-3">
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider">Why Slack over Email / Google Docs?</h4>
+              <ul className="space-y-3 text-xs">
+                <li className="flex gap-2">
+                  <Check className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-white">Preserves Context:</strong> CSMs live inside Slack. Forcing them to open another window introduces context switching.
+                  </div>
+                </li>
+                <li className="flex gap-2">
+                  <Check className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-white">Active Preparation:</strong> Pushing briefings at 8:45 AM keeps client blockers top-of-mind just minutes before standup.
+                  </div>
+                </li>
+                <li className="flex gap-2">
+                  <Check className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-white">Interactive Loopback:</strong> Buttons write directly back to Salesforce or trigger actions inside the server without leaving Slack.
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-slate-900/60 border border-slate-850 p-5 rounded-2xl">
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+                Slack Digest Visual Layout
+              </h4>
+              <div className="bg-slate-950 border border-slate-850 p-4 rounded-xl font-sans text-xs space-y-2 text-slate-300 shadow-inner">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <span className="font-bold text-white">🚨 Monday Portfolio Intelligence Briefing</span>
+                    <p className="text-[10px] text-slate-500 font-mono mt-0.5">Automated CS Engine</p>
+                  </div>
+                  <span className="bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[9px] font-bold px-2 py-0.5 rounded uppercase">Critical</span>
+                </div>
+                <div className="pt-2 border-t border-slate-850 space-y-1">
+                  <p className="font-bold text-white text-xs">Acme Corp Churn Risk Escalation</p>
+                  <p className="text-slate-400 leading-normal text-[11px]">
+                    Champion left. New leadership is reviewing competitive platforms. Health score dropped to 3.8/10. Contract renewal is 2026-06-25.
+                  </p>
+                </div>
+                <div className="flex gap-2 pt-2">
+                  <button onClick={() => showToast("Notified AE regarding Acme Corp risk.")} className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[10px] px-3 py-1.5 rounded transition-all cursor-pointer">
+                    💬 Ping Account Executive
+                  </button>
+                  <button onClick={() => showToast("Escalation ticket created successfully.")} className="bg-slate-855 hover:bg-slate-800 border border-slate-700 text-slate-300 font-bold text-[10px] px-3 py-1.5 rounded transition-all cursor-pointer">
+                    📁 Create Escalation Task
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderOnboardingPlan = () => {
+    return (
+      <div className="space-y-8 text-slate-300">
+        <div>
+          <h2 className="text-lg font-black text-white tracking-tight flex items-center gap-2">
+            <Award className="w-5 h-5 text-emerald-400" />
+            CSM Launch Notification
+          </h2>
+          <p className="text-xs text-slate-400 mt-1">
+            Notification sent to Customer Success channels upon deploying the automation engine.
+          </p>
+
+          <div className="bg-slate-900/60 border border-slate-850 p-6 rounded-2xl mt-4 font-sans text-xs space-y-4 text-slate-300 leading-relaxed max-w-3xl">
+            <div className="border-b border-slate-800 pb-3 flex justify-between items-center text-slate-450">
+              <div>
+                <span className="font-bold text-white">Subject:</span> Launching Your Automated Monday Portfolio Intelligence Briefings 🚀
+              </div>
+              <span className="text-[10px] font-mono">Date: Today</span>
+            </div>
+            <p>Team,</p>
+            <p>
+              Preparing for our Monday 9 AM standup currently requires you to spend roughly **90 minutes** manually logging into Vitally to pull usage statistics, opening Salesforce to check renewal stages, and digging through Weflow notes to recap transcripts. This administrative overhead pulls you away from client focus.
+            </p>
+            <p>
+              Starting this Monday at **8:45 AM**, you will receive an automated **Portfolio Intelligence Briefing** via a direct Slack message.
+            </p>
+            <div className="bg-slate-950/60 p-4 rounded-xl border border-slate-850 space-y-2">
+              <h5 className="font-bold text-white text-xs flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
+                💡 Operational Benefits:
+              </h5>
+              <ul className="list-disc list-inside space-y-1.5 text-slate-400 text-xs">
+                <li>**Zero Manual Ingestion:** All cross-platform databases sync automatically before you log on.</li>
+                <li>**Weekend Risk Visibility:** Instant flags for accounts experiencing weekend drops.</li>
+                <li>**Action Item Consolidation:** Required follow-ups are extracted directly from Weflow transcripts.</li>
+              </ul>
+            </div>
+            <p>
+              This console is built to defend your calendar. Please watch the 3-minute video walkthrough below to see how to navigate your dashboard control panel and customize your alert thresholds.
+            </p>
+            <p className="font-bold text-indigo-400">
+              — HG Insights Revenue Operations & Automation Team
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 bg-white/90 border border-slate-200 shadow-md px-4 py-2.5 rounded-2xl transition-all hover:border-indigo-300">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 text-white flex items-center justify-center font-bold text-sm shadow-sm">
-            {activePortfolio.csmName.split(" ").map(n => n[0]).join("")}
-          </div>
-          <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none">
-              Active CSM Portfolio
-            </span>
-            <select 
-              value={selectedCsm}
-              onChange={(e) => setSelectedCsm(e.target.value)}
-              className="bg-transparent text-slate-900 text-sm font-extrabold border-none outline-none cursor-pointer focus:ring-0 p-0 pr-6 mt-0.5 font-sans"
+        <hr className="border-slate-800" />
+
+        <div>
+          <h2 className="text-lg font-black text-white tracking-tight flex items-center gap-2">
+            <Play className="w-5 h-5 text-indigo-400" />
+            Loom Presentation Walkthrough
+          </h2>
+          <p className="text-xs text-slate-400 mt-1">
+            A 3-minute video submission detailing the database schema, code files, and console controls.
+          </p>
+
+          <div className="bg-slate-950/60 border border-slate-850 p-8 rounded-3xl mt-4 flex flex-col items-center justify-center text-center gap-4 max-w-3xl mx-auto min-h-[220px]">
+            <div className="bg-indigo-500/10 p-4 rounded-full border border-indigo-500/20 text-indigo-400 animate-pulse">
+              <Play className="w-8 h-8 fill-current" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-white">System Demo & Architectural Overview</h4>
+              <p className="text-xs text-slate-500 mt-1 max-w-md">
+                Click below to launch the video walkthrough explaining the Next.js control panel, FastAPI trigger API, and LangGraph workflow nodes.
+              </p>
+            </div>
+            <a 
+              href="https://www.loom.com/share/df46bfbd9e5b4ee89945ee2b6045d62d?sid=b5b63bc0-2051-4091-a189-e14b2d354a72"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-6 py-3 rounded-xl transition-all cursor-pointer shadow-md shadow-indigo-500/10 active:scale-95 flex items-center gap-1.5"
             >
+              Watch Video Presentation <ArrowRight className="w-3.5 h-3.5" />
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderPastWork = () => {
+    return (
+      <div className="space-y-8 text-slate-300">
+        <div>
+          <h2 className="text-lg font-black text-white tracking-tight flex items-center gap-2">
+            <Award className="w-5 h-5 text-purple-400" />
+            GTM Automation Portfolio Case Study
+          </h2>
+          <p className="text-xs text-slate-400 mt-1">
+            Review of a production compliance automation engine developed in a prior assignment.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <div className="space-y-4">
+              <div className="bg-slate-900/60 border border-slate-850 p-5 rounded-2xl">
+                <h4 className="text-sm font-bold text-white">Project: Fraud Fighter AI (ZIGRAM)</h4>
+                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                  Developed an automated compliance engine. Fraud analyst teams were drowning in volume, manually cross-referencing KYC logs and watchlist items, introducing latency.
+                </p>
+              </div>
+
+              <div className="bg-slate-900/60 border border-slate-850 p-5 rounded-2xl">
+                <h4 className="text-sm font-bold text-white text-indigo-400">User-Centric Design Choice</h4>
+                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                  Engineers planned to build a standalone analyst dashboard web portal. However, observation showed introducing another tool created context switching, reducing review rates.
+                </p>
+                <p className="text-xs text-slate-300 font-semibold mt-2.5">
+                  **The Solution:** Instead of a separate portal, we integrated LangGraph risk scoring directly back into their existing transaction queue via REST API. Analysts saw risk parameters directly in the interface they already inhabited.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-slate-900/60 border border-slate-850 p-6 rounded-2xl flex flex-col justify-between">
+              <div>
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">System Flow Chart</h4>
+                <div className="space-y-3 font-mono text-[10px] text-slate-400">
+                  <div className="flex items-center gap-2">
+                    <span className="bg-slate-950 px-2 py-1 rounded border border-slate-800 text-indigo-300 font-bold">Kafka Queue</span>
+                    <span className="text-slate-500">→</span>
+                    <span className="bg-slate-950 px-2 py-1 rounded border border-slate-800 text-emerald-300 font-bold">Node Ingest</span>
+                  </div>
+                  
+                  <div className="border-l-2 border-slate-800 ml-6 h-4" />
+                  
+                  <div className="flex items-center gap-2">
+                    <span className="bg-slate-950 px-2 py-1 rounded border border-slate-800 text-purple-300 font-bold">LangGraph Scorer</span>
+                    <span className="text-slate-500">→</span>
+                    <span className="text-slate-400">ChatOpenAI Model</span>
+                  </div>
+                  
+                  <div className="border-l-2 border-slate-800 ml-6 h-4" />
+                  
+                  <div className="flex items-center gap-2">
+                    <span className="bg-slate-950 px-2 py-1 rounded border border-slate-800 text-blue-300 font-bold">Push Gateway API</span>
+                    <span className="text-slate-500">→</span>
+                    <span className="bg-slate-950 px-2 py-1 rounded border border-slate-850 text-white font-bold">Workforce Ticket Screen</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-slate-850 mt-4 text-[10px] text-slate-550 leading-relaxed">
+                Aggregated cross-platform KYC signals evaluated via LangGraph. Yielded 85% review rate reduction.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    appViewMode === "assignment" ? (
+      <div 
+        className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans relative overflow-y-auto pb-12"
+        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+      >
+        <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-indigo-500/10 blur-3xl pointer-events-none z-0" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-purple-500/10 blur-3xl pointer-events-none z-0" />
+
+        {toastMessage && (
+          <div className="fixed top-6 right-6 bg-slate-800 text-white text-xs font-bold px-5 py-3.5 rounded-2xl shadow-xl z-50 flex items-center gap-2 border border-slate-700 animate-slide-in">
+            <Sparkles className="w-4 h-4 text-yellow-400 animate-pulse" />
+            <span>{toastMessage}</span>
+          </div>
+        )}
+
+        <header className="border-b border-slate-850 bg-slate-950/80 backdrop-blur-md px-6 lg:px-12 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 z-10 sticky top-0 flex-shrink-0">
+          <div className="flex items-center gap-4">
+            <div className="bg-gradient-to-tr from-indigo-600 to-violet-600 p-2.5 rounded-2xl shadow-lg shadow-indigo-500/30">
+              <Activity className="text-white w-6 h-6 animate-pulse" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-lg font-black text-white tracking-tight">
+                  HG Insights
+                </h1>
+                <span className="bg-indigo-500/25 border border-indigo-500/30 text-indigo-400 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                  Portfolio Submission
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 mt-0.5 font-semibold">
+                GTM Automation Engineer Work Sample — Hrishikesh Suresh Sarode
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setAppViewMode("console")}
+            className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-extrabold px-5 py-3 rounded-2xl shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer active:scale-95 flex-shrink-0"
+          >
+            <Zap className="w-3.5 h-3.5 fill-current text-yellow-300 animate-bounce" />
+            Launch Interactive Console ⚡
+          </button>
+        </header>
+
+        <main className="max-w-5xl w-full mx-auto px-6 lg:px-8 mt-8 flex-1 z-10 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-slate-900/40 backdrop-blur-md border border-slate-850 p-5 rounded-2xl flex items-center justify-between hover:border-slate-800 transition-all">
+              <div>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Trigger Mechanism</p>
+                <h3 className="text-sm font-bold text-white tracking-tight">Mon 7:00 AM EventBridge</h3>
+                <p className="text-[11px] text-indigo-400 font-semibold mt-1">2-hour pre-standup buffer</p>
+              </div>
+              <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 text-indigo-400">
+                <Clock className="w-5 h-5" />
+              </div>
+            </div>
+
+            <div className="bg-slate-900/40 backdrop-blur-md border border-slate-850 p-5 rounded-2xl flex items-center justify-between hover:border-slate-800 transition-all">
+              <div>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Data Ingestion sources</p>
+                <h3 className="text-sm font-bold text-white tracking-tight">Vitally, Salesforce, Weflow</h3>
+                <p className="text-[11px] text-emerald-400 font-semibold mt-1">Unified relational joins on accountId</p>
+              </div>
+              <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 text-emerald-400">
+                <Users className="w-5 h-5" />
+              </div>
+            </div>
+
+            <div className="bg-slate-900/40 backdrop-blur-md border border-slate-850 p-5 rounded-2xl flex items-center justify-between hover:border-slate-800 transition-all">
+              <div>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Delivery Channel</p>
+                <h3 className="text-sm font-bold text-white tracking-tight">Slack Block Kit DM</h3>
+                <p className="text-[11px] text-purple-400 font-semibold mt-1">Interactive action buttons writeback</p>
+              </div>
+              <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 text-purple-400">
+                <MessageSquare className="w-5 h-5" />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex bg-slate-900/60 p-1 rounded-2xl border border-slate-850 gap-1">
+            <button
+              onClick={() => setAssignmentTab("design")}
+              className={`flex-1 py-3 px-3 rounded-xl text-xs font-extrabold tracking-wider transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 ${
+                assignmentTab === "design"
+                  ? "bg-slate-800 text-white shadow-md border border-slate-700"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/60"
+              }`}
+            >
+              <Code className="w-3.5 h-3.5 text-indigo-400" />
+              1. Technical Design Doc
+            </button>
+            <button
+              onClick={() => setAssignmentTab("onboarding")}
+              className={`flex-1 py-3 px-3 rounded-xl text-xs font-extrabold tracking-wider transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 ${
+                assignmentTab === "onboarding"
+                  ? "bg-slate-800 text-white shadow-md border border-slate-700"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/60"
+              }`}
+            >
+              <Users className="w-3.5 h-3.5 text-emerald-400" />
+              2. Onboarding & Rollout
+            </button>
+            <button
+              onClick={() => setAssignmentTab("past")}
+              className={`flex-1 py-3 px-3 rounded-xl text-xs font-extrabold tracking-wider transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 ${
+                assignmentTab === "past"
+                  ? "bg-slate-800 text-white shadow-md border border-slate-700"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/60"
+              }`}
+            >
+              <Award className="w-3.5 h-3.5 text-purple-400" />
+              3. Past GTM Work
+            </button>
+          </div>
+
+          <div className="bg-slate-900/40 backdrop-blur-md border border-slate-850 rounded-3xl p-6 lg:p-8 hover:border-slate-800/80 transition-all shadow-xl">
+            {assignmentTab === "design" && renderDesignDoc()}
+            {assignmentTab === "onboarding" && renderOnboardingPlan()}
+            {assignmentTab === "past" && renderPastWork()}
+          </div>
+        </main>
+      </div>
+    ) : (
+      <div 
+        className="min-h-screen lg:h-screen bg-gradient-to-br from-indigo-50/60 via-slate-50 to-purple-50/50 text-slate-800 flex flex-col font-sans relative lg:overflow-hidden"
+        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+      >
+        <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-200/40 blur-3xl pointer-events-none z-0" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-purple-200/40 blur-3xl pointer-events-none z-0" />
+
+        {toastMessage && (
+          <div className="fixed top-6 right-6 bg-slate-900 text-white text-xs font-bold px-5 py-3.5 rounded-2xl shadow-xl z-50 flex items-center gap-2 border border-slate-700 animate-slide-in">
+            <Sparkles className="w-4 h-4 text-yellow-400 animate-pulse" />
+            <span>{toastMessage}</span>
+          </div>
+        )}
+
+        <header className="border-b border-indigo-100/60 bg-white/70 backdrop-blur-md px-4 lg:px-8 py-3 flex flex-row justify-between items-center gap-3 shadow-sm z-10 sticky top-0 flex-shrink-0">
+          <div className="flex items-center gap-4">
+            <div className="bg-gradient-to-tr from-indigo-600 to-violet-600 p-2.5 rounded-2xl shadow-lg shadow-indigo-500/20">
+              <Activity className="text-white w-6 h-6 animate-pulse" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-lg lg:text-2xl font-extrabold text-slate-900 tracking-tight bg-gradient-to-r from-indigo-900 to-slate-900 bg-clip-text text-transparent">
+                  HG Insights Workspace
+                </h1>
+                <span className="hidden sm:inline bg-indigo-100 border border-indigo-200 text-indigo-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                  v2.1 Enterprise
+                </span>
+              </div>
+              <p className="text-xs text-indigo-600 font-bold uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
+                <Zap className="w-3.5 h-3.5 fill-indigo-600 animate-bounce" /> Telemetry & CS Orchestrator
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setAppViewMode("assignment")}
+              className="flex items-center gap-1.5 bg-indigo-50 border border-indigo-200 text-indigo-705 hover:bg-indigo-100 hover:border-indigo-300 text-xs font-bold px-4 py-2.5 rounded-2xl transition-all duration-200 cursor-pointer shadow-sm active:scale-95 flex-shrink-0"
+            >
+              <BookOpen className="w-4 h-4 text-indigo-600" /> View Answers
+            </button>
+
+            <div className="flex items-center gap-3 bg-white/90 border border-slate-200 shadow-md px-4 py-2.5 rounded-2xl transition-all hover:border-indigo-300">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                {activePortfolio.csmName.split(" ").map(n => n[0]).join("")}
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none">
+                  Active CSM Portfolio
+                </span>
+                <select 
+                  value={selectedCsm}
+                  onChange={(e) => setSelectedCsm(e.target.value)}
+                  className="bg-transparent text-slate-900 text-sm font-extrabold border-none outline-none cursor-pointer focus:ring-0 p-0 pr-6 mt-0.5 font-sans"
+                >
               <option value="CSM_MARK_R">Mark Robinson</option>
               <option value="CSM_SARAH_K">Sarah Jenkins</option>
               <option value="CSM_ALEX_B">Alex Baldwin</option>
@@ -2197,6 +2644,7 @@ export default function Dashboard() {
               <option value="CSM_MICHAEL_W">Michael Wong</option>
             </select>
           </div>
+        </div>
         </div>
       </header>
 
@@ -2780,5 +3228,6 @@ export default function Dashboard() {
         </div>
       )}
     </div>
+    )
   );
 }
