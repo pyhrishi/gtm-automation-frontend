@@ -2142,7 +2142,7 @@ export default function Dashboard() {
 
   return (
     <div 
-      className="h-screen bg-gradient-to-br from-indigo-50/60 via-slate-50 to-purple-50/50 text-slate-800 flex flex-col font-sans relative overflow-hidden"
+      className="min-h-screen lg:h-screen bg-gradient-to-br from-indigo-50/60 via-slate-50 to-purple-50/50 text-slate-800 flex flex-col font-sans relative lg:overflow-hidden"
       style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
       <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-200/40 blur-3xl pointer-events-none z-0" />
@@ -2155,17 +2155,17 @@ export default function Dashboard() {
         </div>
       )}
 
-      <header className="border-b border-indigo-100/60 bg-white/70 backdrop-blur-md px-8 py-3 flex flex-col md:flex-row justify-between items-center gap-4 shadow-sm z-10 sticky top-0 flex-shrink-0">
+      <header className="border-b border-indigo-100/60 bg-white/70 backdrop-blur-md px-4 lg:px-8 py-3 flex flex-row justify-between items-center gap-3 shadow-sm z-10 sticky top-0 flex-shrink-0">
         <div className="flex items-center gap-4">
           <div className="bg-gradient-to-tr from-indigo-600 to-violet-600 p-2.5 rounded-2xl shadow-lg shadow-indigo-500/20">
             <Activity className="text-white w-6 h-6 animate-pulse" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight bg-gradient-to-r from-indigo-900 to-slate-900 bg-clip-text text-transparent">
+              <h1 className="text-lg lg:text-2xl font-extrabold text-slate-900 tracking-tight bg-gradient-to-r from-indigo-900 to-slate-900 bg-clip-text text-transparent">
                 HG Insights Workspace
               </h1>
-              <span className="bg-indigo-100 border border-indigo-200 text-indigo-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+              <span className="hidden sm:inline bg-indigo-100 border border-indigo-200 text-indigo-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                 v2.1 Enterprise
               </span>
             </div>
@@ -2200,7 +2200,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <section className="px-8 pt-4 pb-3 grid grid-cols-4 gap-4 z-10 flex-shrink-0">
+      <section className="px-4 lg:px-8 pt-3 pb-2 grid grid-cols-2 lg:grid-cols-4 gap-3 z-10 flex-shrink-0">
         <div className="bg-white/90 backdrop-blur-md border border-indigo-100/50 p-3 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-indigo-500/5 hover:-translate-y-0.5 hover:border-indigo-200/80 transition-all duration-300 group min-h-0">
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Portfolio Size</p>
@@ -2263,10 +2263,10 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <main className="flex-1 min-h-0 overflow-hidden px-8 pb-4 flex flex-row gap-6 z-10 relative">
+      <main className="lg:flex-1 lg:min-h-0 lg:overflow-hidden px-4 lg:px-8 pb-4 flex flex-col lg:flex-row gap-4 lg:gap-6 z-10 relative">
         
-        <div className="w-1/3 flex-shrink-0 flex flex-col min-h-0">
-          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col flex-1 min-h-0 overflow-hidden">
+        <div className="w-full lg:w-1/3 lg:flex-shrink-0 flex flex-col lg:min-h-0">
+          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col min-h-[420px] lg:flex-1 lg:min-h-0 overflow-hidden">
             <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/60 flex-shrink-0">
               <div>
                 <h3 className="font-extrabold text-slate-900 text-sm tracking-wide">Portfolio Directory</h3>
@@ -2336,9 +2336,9 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="w-1/3 flex-shrink-0 flex flex-col gap-4 min-h-0">
+        <div className="w-full lg:w-1/3 lg:flex-shrink-0 flex flex-col gap-4">
           
-          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col p-5 gap-3 h-[57%] min-h-0 overflow-hidden">
+          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col p-5 gap-3 min-h-[380px] lg:h-[57%] lg:min-h-0 overflow-hidden">
             <div className="flex justify-between items-start border-b border-slate-100 pb-3 flex-shrink-0">
               <div>
                 <span className="bg-indigo-50 border border-indigo-100 text-indigo-700 text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
@@ -2408,7 +2408,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col h-[43%] min-h-0 overflow-hidden">
+          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col min-h-[320px] lg:h-[43%] lg:min-h-0 overflow-hidden">
             <div className="px-5 py-3 border-b border-slate-100 bg-slate-50/60 flex justify-between items-center flex-shrink-0">
               <div>
                 <h3 className="font-extrabold text-slate-900 text-sm tracking-wide">Action Playbooks</h3>
@@ -2483,9 +2483,9 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="w-1/3 flex-shrink-0 flex flex-col min-h-0">
+        <div className="w-full lg:w-1/3 lg:flex-shrink-0 flex flex-col lg:min-h-0">
           
-          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col flex-1 min-h-0 overflow-hidden">
+          <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col min-h-[480px] lg:flex-1 lg:min-h-0 overflow-hidden">
             
             <div className="px-5 py-3 border-b border-slate-100 bg-slate-50/60 flex justify-between items-center flex-shrink-0">
               <div>
@@ -2659,7 +2659,7 @@ export default function Dashboard() {
               )}
             </div>
 
-            <div className="px-5 py-3 border-t border-slate-200 bg-slate-50 flex flex-col h-[190px] flex-shrink-0 overflow-hidden">
+            <div className="px-5 py-3 border-t border-slate-200 bg-slate-50 flex flex-col h-[160px] lg:h-[190px] flex-shrink-0 overflow-hidden">
               <div className="flex justify-between items-center mb-1.5 flex-shrink-0">
                 <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
                   <Terminal className="w-3.5 h-3.5 text-indigo-600" /> LangGraph Orchestrator Trace
@@ -2705,7 +2705,7 @@ export default function Dashboard() {
         </div>
       </main>
 
-      <footer className="border-t border-slate-200 bg-white px-8 py-2.5 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-slate-500 z-10 flex-shrink-0">
+      <footer className="border-t border-slate-200 bg-white px-4 lg:px-8 py-2.5 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-slate-500 z-10 flex-shrink-0">
         <p className="flex items-center gap-1.5">
           <ShieldCheck className="w-4 h-4 text-emerald-600" /> System compliant with Vitally and Salesforce schemas.
         </p>
