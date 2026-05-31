@@ -2153,6 +2153,25 @@ export default function Dashboard() {
           <p className="text-xs text-slate-400 mt-1">
             End-to-end telemetry pipeline querying Vitally, Salesforce CPQ, and Weflow to push active briefings directly into Slack.
           </p>
+
+          <div className="mt-4 bg-slate-900/40 border border-slate-850 p-4 rounded-2xl flex flex-col items-center gap-3">
+            <div className="w-full flex justify-between items-center">
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">System Architecture Diagram</span>
+              <a 
+                href="/gtm_architecture_v1.png" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-[10px] text-indigo-400 hover:text-indigo-300 font-bold flex items-center gap-1"
+              >
+                Open Fullscreen
+              </a>
+            </div>
+            <img 
+              src="/gtm_architecture_v1.png" 
+              alt="HG Insights GTM Architecture Diagram"
+              className="rounded-xl border border-slate-800 shadow-md max-w-full h-auto max-h-[350px] object-contain hover:scale-[1.01] transition-transform duration-300"
+            />
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
             <div className="bg-slate-900/40 border border-slate-850 p-5 rounded-2xl">
@@ -2458,7 +2477,7 @@ export default function Dashboard() {
   return (
     appViewMode === "assignment" ? (
       <div 
-        className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans relative overflow-y-auto pb-12"
+        className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans relative pb-12"
         style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
       >
         <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-indigo-500/10 blur-3xl pointer-events-none z-0" />
