@@ -153,11 +153,18 @@ export default function Dashboard() {
         csmId: selectedCsm,
       });
       
+      const payload = response?.data?.slackBlockKitPayload;
+      
       setTimeout(() => {
         addLog(`✅ [Slack Gateway] Slack Block Kit payload formatted and validated.`);
         addLog(`🚀 Payload sent to webhook destination.`);
-        setSlackPayload(response.data.slackBlockKitPayload);
-        showToast("Telemetry synced! Slack payload generated.");
+        if (Array.isArray(payload)) {
+          setSlackPayload(payload);
+          showToast("Telemetry synced! Slack payload generated.");
+        } else {
+          addLog(`❌ ERROR: Slack Block Kit payload is malformed or missing.`);
+          showToast("Received malformed payload.");
+        }
       }, 2500);
 
     } catch (error) {
@@ -657,7 +664,7 @@ export default function Dashboard() {
                   </div>
 
                   <div className="p-5 flex-1 overflow-y-auto bg-white flex flex-col justify-between">
-                    {!slackPayload ? (
+                    {!Array.isArray(slackPayload) ? (
                       <div className="h-full flex flex-col items-center justify-center text-slate-400 gap-4 py-20">
                         <div className="bg-indigo-50 p-4 rounded-full border border-indigo-100 shadow-md">
                           <AlertTriangle className="w-8 h-8 text-indigo-600 animate-bounce" />
@@ -684,10 +691,12 @@ export default function Dashboard() {
                           {/* Slack block parser */}
                           <div className="space-y-4 mt-3">
                             {slackPayload.map((block, index) => {
+                              if (!block) return null;
+                              
                               if (block.type === "header") {
                                 return (
                                   <h4 key={index} className="text-sm font-extrabold text-slate-950 tracking-tight border-b border-slate-100 pb-2">
-                                    {block.text.text}
+                                    {block.text?.text || ""}
                                   </h4>
                                 );
                               }
@@ -697,7 +706,7 @@ export default function Dashboard() {
                               }
                               
                               if (block.type === "section") {
-                                const rawText = block.text.text;
+                                const rawText = block.text?.text || "";
                                 const isCritical = rawText.includes("🔴");
                                 const isElevated = rawText.includes("🟡");
                                 const isStable = rawText.includes("🟢");
